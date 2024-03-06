@@ -1,4 +1,4 @@
-# React template
+# Shed.Edu
 
 ## Requirements
 
@@ -18,4 +18,4 @@
 - `components` - Used to store reusable react components
 - `config` - Define global configs here
 - `pages` - Add your project page components here
-- `services` - Used for service function to access API
+- `services` - Used for service functions to access API
