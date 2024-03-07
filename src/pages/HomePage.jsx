@@ -9,8 +9,7 @@ function HomePage() {
         <Heading>Get started</Heading>
         <Image src={reactIcon} alt="React" />
       </Stack>
-
-      <Todos />
+      DaniaV
     </Container>
   );
 }
