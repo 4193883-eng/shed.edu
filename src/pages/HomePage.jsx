@@ -10,7 +10,7 @@ function HomePage() {
         <Image src={reactIcon} alt="React" />
       </Stack>
 
-      <Todos />
+      Vsevolod
     </Container>
   );
 }
