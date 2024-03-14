@@ -1,5 +1,3 @@
 export function RegisterPage() {
-    return (
-        <></>
-    )
+  return <></>;
 }
