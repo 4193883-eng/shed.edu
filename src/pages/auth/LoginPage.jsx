@@ -1,5 +1,11 @@
+import { Link } from 'react-router-dom';
+
 export function LoginPage() {
-    return (
-        <></>
-    )
+  return (
+    <div>
+      <nav>
+        <Link to="/signin" />
+      </nav>
+    </div>
+  );
 }
