@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-
+import { LoginPage } from '../pages/auth/LoginPage';
 import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
 
@@ -9,7 +9,8 @@ function App() {
   return (
     <Routes>
       <Route element={<RootLayout />}>
-        <Route path="*" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signin" element={<LoginPage />} />
       </Route>
     </Routes>
   );
