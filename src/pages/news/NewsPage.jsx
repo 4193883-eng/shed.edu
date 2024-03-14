@@ -1,5 +1,3 @@
 export function NewsPage() {
-    return (
-        <></>
-    )
+  return <></>;
 }

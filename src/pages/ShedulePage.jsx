@@ -1,5 +1,3 @@
 export function ShedulePage() {
-    return (
-        <>Shedule Page</>
-    )
+  return <>Shedule Page</>;
 }

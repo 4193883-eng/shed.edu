@@ -1,5 +1,5 @@
-import {createAction} from "@reduxjs/toolkit";
+import { createAction } from '@reduxjs/toolkit';
 
-export const setAuthTokenAction = createAction('@auth/setAuthToken')
+export const setAuthTokenAction = createAction('@auth/setAuthToken');
 
-export const flushAuthTokenAction = createAction('@auth/flushAuthToken')
+export const flushAuthTokenAction = createAction('@auth/flushAuthToken');

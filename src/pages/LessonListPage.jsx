@@ -1,5 +1,3 @@
 export function LessonListPage() {
-    return (
-        <></>
-    )
+  return <></>;
 }

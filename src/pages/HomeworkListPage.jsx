@@ -1,5 +1,3 @@
 export function HomeworkListPage() {
-    return (
-        <></>
-    )
+  return <></>;
 }

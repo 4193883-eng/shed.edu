@@ -1,5 +1,3 @@
 export function ProfilePage() {
-    return (
-        <></>
-    )
+  return <></>;
 }

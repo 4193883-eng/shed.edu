@@ -1,0 +1,11 @@
+{
+  "/": "Home Page",
+  "/signin": "Sign In",
+  "/signup": "Registration",
+  "/hw-list": "Homework List",
+  "/lesson-list": "Lesson List",
+  "/profile": "Profile Page",
+  "/news": "News Feed Page",
+  "/news/:id": "Article Page",
+  "/shedule": "Schedule Page"
+}
