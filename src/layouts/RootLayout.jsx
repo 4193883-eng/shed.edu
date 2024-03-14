@@ -11,7 +11,7 @@ export function RootLayout() {
 
   return (
     <>
-      <Navbar isLoggedIn={authToken} onOpen={() => setIsSideBarOpen(true)} />
+      <Navbar isLoggedIn={!!authToken} onOpen={() => setIsSideBarOpen(true)} />
       <Sidebar isOpen={isSideBarOpen} onClose={() => setIsSideBarOpen(false)} />
       <Outlet />
     </>
