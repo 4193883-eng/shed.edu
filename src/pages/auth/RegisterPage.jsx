@@ -26,17 +26,18 @@ export default function RegisterPage() {
           <SiteLogo to="/signin">SignIn</SiteLogo>
           <Input placeholder="email" />
           <Input placeholder="password" type="password" />
-          <ButtonGroup>
+          <ButtonGroup w={'100%'}>
             <Input placeholder="FirstName" />
             <Input placeholder="LastName" />
           </ButtonGroup>
-          <ButtonGroup>
+          <ButtonGroup w={'100%'}>
             <Button colorScheme="purple">Register</Button>
             <Button
               as={Link}
               to={'/signin'}
               variant={'ghost'}
               colorScheme="purple"
+              w={'100%'}
             >
               Login
             </Button>
