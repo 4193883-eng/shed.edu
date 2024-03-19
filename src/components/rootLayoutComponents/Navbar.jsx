@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useLocation, useNavigate } from 'react-router-dom';
 import sitemap from '../../sitemap.json';
 import { useEffect, useState } from 'react';
-import { SiteLogo } from '../SiteLogo.jsx';
+import { SiteLogo } from '../SiteLogo';
 
 export function Navbar({ isLoggedIn, onOpen }) {
   const loc = useLocation();

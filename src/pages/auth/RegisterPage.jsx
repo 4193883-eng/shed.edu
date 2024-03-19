@@ -5,7 +5,7 @@ export default function RegisterPage() {
   return (
     <Flex flexDirection={'column'}>
       <Box>
-        <Link to="/signin">SignIn</Link>
+        <Link to="/signup">SignIn</Link>
       </Box>
     </Flex>
   );
