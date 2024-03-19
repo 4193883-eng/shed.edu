@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { LoginPage } from '../pages/auth/LoginPage';
+import LoginPage from '../pages/auth/LoginPage';
 import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
 import PrivateRoute from './PrivateRoute';

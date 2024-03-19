@@ -1,4 +1,7 @@
-import { Link } from 'react-router-dom';
+import { InputField } from '../../components/auth/InputField';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import { SiteLogo } from '../../components/SiteLogo';
 import {
   Flex,
   Box,
@@ -10,25 +13,66 @@ import {
   ButtonGroup,
   Wrap,
 } from '@chakra-ui/react';
-import { SiteLogo } from '../../components/SiteLogo';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { Link } from 'react-router-dom';
 
-export function LoginPage() {
+const validationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .min(3)
+    .max(50, 'Email cannot be longer than 50')
+    .required('Email is required'),
+  password: yup.string().min(8).max(255).required('Password is required'),
+});
+
+export default function RegisterPage() {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
   return (
-    <>
-      <Flex h={'90vh'} justifyContent={'center'} alignItems={'center'}>
-        <Card mx={'30%'} w={'500px'}>
-          <CardBody
+    <Flex h={'90vh'} justifyContent={'center'} alignItems={'center'}>
+      <Card mx={'30%'} w={'500px'}>
+        <CardBody
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={4}
+          w={'100%'}
+        >
+          <SiteLogo to="/signin">SignIn</SiteLogo>
+          <Box
+            mt={'2'}
             display={'flex'}
-            flexDirection={'column'}
+            flexDir={'column'}
+            gap={'4'}
             justifyContent={'center'}
             alignItems={'center'}
-            gap={4}
+            w={'100%'}
           >
-            <SiteLogo to="/signin">Login</SiteLogo>
-            <Input placeholder="email" />
-            <Input placeholder="password" type="password" />
+            <InputField
+              required={true}
+              label={'Email'}
+              disabled={false}
+              meta={formik.getFieldMeta('email')}
+              placeholder="Email"
+              {...formik.getFieldProps('email')}
+            />
+            <InputField
+              required={true}
+              label={'Password'}
+              disabled={false}
+              meta={formik.getFieldMeta('password')}
+              placeholder="Password"
+              type="password"
+              {...formik.getFieldProps('password')}
+            />
             <ButtonGroup w={'100%'}>
               <Button colorScheme="purple" w={'100%'}>
                 Login
@@ -43,9 +87,9 @@ export function LoginPage() {
                 Register
               </Button>
             </ButtonGroup>
-          </CardBody>
-        </Card>
-      </Flex>
-    </>
+          </Box>
+        </CardBody>
+      </Card>
+    </Flex>
   );
 }
