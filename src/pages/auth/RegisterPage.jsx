@@ -1,3 +1,5 @@
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { SiteLogo } from '../../components/SiteLogo';
 import {
   Flex,
@@ -11,6 +13,17 @@ import {
   Wrap,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+
+const validationSchema = yup.object().shape({
+  username: yup
+    .string()
+    .min(3)
+    .max(50, 'Username cannot be longer than 50')
+    .required('Username is required'),
+  password: yup.string().min(8).max(255).required('Password is required'),
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+});
 
 export default function RegisterPage() {
   return (
@@ -31,7 +44,9 @@ export default function RegisterPage() {
             <Input placeholder="LastName" />
           </ButtonGroup>
           <ButtonGroup w={'100%'}>
-            <Button colorScheme="purple">Register</Button>
+            <Button colorScheme="purple" w={'100%'}>
+              Register
+            </Button>
             <Button
               as={Link}
               to={'/signin'}
