@@ -4,6 +4,7 @@ import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
 import PrivateRoute from './PrivateRoute';
 import RegisterPage from '../pages/auth/RegisterPage';
+import { NewsPage } from '../pages/news/NewsPage.jsx';
 
 function App() {
   // const [isSidebarOpened, onSidebarOpen, onSidebarClose] = useDisclosure();
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
+        <Route path="/news" element={<NewsPage />} />
       </Route>
     </Routes>
   );
