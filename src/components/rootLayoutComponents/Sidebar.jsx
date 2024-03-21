@@ -10,11 +10,14 @@ import {
   DrawerBody,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { SiteLogo } from '../SiteLogo.jsx';
 import { IoClose } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { flushAuthTokenAction } from '../../redux/auth/authActions.js';
 
 export function Sidebar({ isOpen = false, onClose }) {
+  const dispatch = useDispatch();
   return (
     <Drawer placement={'left'} isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
@@ -49,8 +52,14 @@ export function Sidebar({ isOpen = false, onClose }) {
           </Flex>
         </DrawerBody>
         <DrawerFooter>
-          <Button as={Link} to={'/'}>
-            Log off
+          <Button
+            onClick={() => {
+              dispatch(flushAuthTokenAction());
+            }}
+            as={Link}
+            to={'/'}
+          >
+            Log out
           </Button>
         </DrawerFooter>
       </DrawerContent>

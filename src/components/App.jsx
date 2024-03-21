@@ -8,8 +8,6 @@ import RegisterPage from '../pages/auth/RegisterPage';
 import { NewsPage } from '../pages/news/NewsPage.jsx';
 
 function App() {
-  // const [isSidebarOpened, onSidebarOpen, onSidebarClose] = useDisclosure();
-
   return (
     <Routes>
       <Route element={<RootLayout />}>
