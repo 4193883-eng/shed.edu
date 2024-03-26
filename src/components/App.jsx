@@ -11,10 +11,25 @@ function App() {
   return (
     <Routes>
       <Route element={<RootLayout />}>
-        <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
-        <Route path="/news" element={<NewsPage />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/news"
+          element={
+            <PrivateRoute>
+              <NewsPage />
+            </PrivateRoute>
+          }
+        />
       </Route>
     </Routes>
   );
