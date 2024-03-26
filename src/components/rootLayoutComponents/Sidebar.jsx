@@ -12,13 +12,15 @@ import {
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { SiteLogo } from '../SiteLogo.jsx';
-import { FaHome } from 'react-icons/fa';
-import { FaAddressCard } from 'react-icons/fa';
-import { FaArrowRightFromBracket, FaNewspaper } from 'react-icons/fa6';
+import { MdBallot } from 'react-icons/md';
+import { FaAddressCard, FaRegCalendarAlt, FaHome } from 'react-icons/fa';
+import {
+  FaArrowRightFromBracket,
+  FaNewspaper,
+  FaArrowRightToBracket,
+  FaPersonChalkboard,
+} from 'react-icons/fa6';
 import { IoClose } from 'react-icons/io5';
-import { PiSignInFill } from 'react-icons/pi';
-import { FaArrowRightToBracket } from 'react-icons/fa6';
-
 import { Link } from 'react-router-dom';
 import { flushAuthTokenAction } from '../../redux/auth/authActions.js';
 
@@ -51,7 +53,7 @@ export function Sidebar({ isOpen = false, onClose }) {
               fontWeight={'400'}
               fontFamily={'B612 Mono", monospace'}
               sizeIcon={'10'}
-              marginBottom={'10pxС'}
+              marginBottom={'10px'}
               paddingLeft={'10px'}
               justifyContent={'start'}
               variant="ghost"
@@ -87,7 +89,7 @@ export function Sidebar({ isOpen = false, onClose }) {
               Log in
             </Button>
             <Button
-              leftIcon={<FaNewspaper size={'25px'} />}
+              leftIcon={<FaRegCalendarAlt size={'25px'} />}
               fontWeight={'400'}
               fontFamily={'B612 Mono", monospace'}
               marginBottom={'10px'}
@@ -97,7 +99,33 @@ export function Sidebar({ isOpen = false, onClose }) {
               as={Link}
               to={'/news'}
             >
-              News
+              Schedule
+            </Button>
+            <Button
+              leftIcon={<FaPersonChalkboard size={'25px'} />}
+              fontWeight={'400'}
+              fontFamily={'B612 Mono", monospace'}
+              marginBottom={'10px'}
+              paddingLeft={'10px'}
+              justifyContent={'start'}
+              variant="ghost"
+              as={Link}
+              to={'/news'}
+            >
+              Lesson List
+            </Button>
+            <Button
+              leftIcon={<MdBallot size={'25px'} />}
+              fontWeight={'400'}
+              fontFamily={'B612 Mono", monospace'}
+              marginBottom={'10px'}
+              paddingLeft={'10px'}
+              justifyContent={'start'}
+              variant="ghost"
+              as={Link}
+              to={'/news'}
+            >
+              HomeWork List
             </Button>
           </Flex>
         </DrawerBody>

@@ -1,4 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
+import { NewsDetailPage } from '../pages/news/NewsDetailPage.jsx';
+import { HomeworkListPage } from '../pages/HomeworkListPage.jsx';
+import { LessonListPage } from '../pages/LessonListPage.jsx';
+import { ShedulePage } from '../pages/ShedulePage.jsx';
 import LoginPage from '../pages/auth/LoginPage';
 import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
@@ -27,6 +31,42 @@ function App() {
           element={
             <PrivateRoute>
               <NewsPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/hw-list"
+          element={
+            <PrivateRoute>
+              <HomeworkListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/lesson-list"
+          element={
+            <PrivateRoute>
+              <LessonListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/shedule"
+          element={
+            <PrivateRoute>
+              <ShedulePage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/news/:id"
+          element={
+            <PrivateRoute>
+              <NewsDetailPage />
             </PrivateRoute>
           }
         />
