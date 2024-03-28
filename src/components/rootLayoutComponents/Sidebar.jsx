@@ -97,7 +97,7 @@ export function Sidebar({ isOpen = false, onClose }) {
               justifyContent={'start'}
               variant="ghost"
               as={Link}
-              to={'/news'}
+              to={'/shedule'}
             >
               Schedule
             </Button>
@@ -110,7 +110,7 @@ export function Sidebar({ isOpen = false, onClose }) {
               justifyContent={'start'}
               variant="ghost"
               as={Link}
-              to={'/news'}
+              to={'/lesson-list'}
             >
               Lesson List
             </Button>
@@ -123,7 +123,7 @@ export function Sidebar({ isOpen = false, onClose }) {
               justifyContent={'start'}
               variant="ghost"
               as={Link}
-              to={'/news'}
+              to={'/hw-list'}
             >
               HomeWork List
             </Button>
