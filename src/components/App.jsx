@@ -1,15 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { NewsDetailPage } from '../pages/news/NewsDetailPage.jsx';
 import { HomeworkListPage } from '../pages/HomeworkListPage.jsx';
 import { LessonListPage } from '../pages/LessonListPage.jsx';
 import { ShedulePage } from '../pages/ShedulePage.jsx';
 import LoginPage from '../pages/auth/LoginPage';
 import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
-// eslint-disable-next-line no-unused-vars
 import PrivateRoute from './PrivateRoute';
 import RegisterPage from '../pages/auth/RegisterPage';
-import { NewsPage } from '../pages/news/NewsPage.jsx';
 
 function App() {
   return (
@@ -22,15 +19,6 @@ function App() {
           element={
             <PrivateRoute>
               <HomePage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/news"
-          element={
-            <PrivateRoute>
-              <NewsPage />
             </PrivateRoute>
           }
         />
@@ -62,14 +50,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/news/:id"
-          element={
-            <PrivateRoute>
-              <NewsDetailPage />
-            </PrivateRoute>
-          }
-        />
       </Route>
     </Routes>
   );
