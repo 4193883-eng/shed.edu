@@ -16,7 +16,6 @@ import { MdBallot } from 'react-icons/md';
 import { FaAddressCard, FaRegCalendarAlt, FaHome } from 'react-icons/fa';
 import {
   FaArrowRightFromBracket,
-  FaNewspaper,
   FaArrowRightToBracket,
   FaPersonChalkboard,
 } from 'react-icons/fa6';
