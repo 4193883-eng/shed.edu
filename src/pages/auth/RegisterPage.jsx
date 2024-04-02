@@ -1,5 +1,5 @@
 import { setAuthTokenAction } from '../../redux/auth/authActions';
-import { registerService } from '../../services/authServices';
+import { registerService } from '../../services/authServices.js';
 import { useDispatch } from 'react-redux';
 import { InputField } from '../../components/auth/InputField';
 import { useFormik } from 'formik';
