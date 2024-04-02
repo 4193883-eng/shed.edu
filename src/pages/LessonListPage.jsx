@@ -2,11 +2,12 @@ import { Box, Button, Divider, Flex, Heading, List } from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField.jsx';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {
   createSubjectService,
   getAllSubjectsService,
 } from '../services/subjectsServices.js';
+import {LessonListItem} from "../components/LessonListItem.jsx";
 
 const validationSchema = yup.object().shape({
   subjectName: yup.string().min(3, 'The subject name is too short'),
@@ -16,7 +17,12 @@ export function LessonListPage() {
   const [isFormLoading, setFormLoading] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchSubjects()
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -33,18 +39,20 @@ export function LessonListPage() {
         })
         .then((sub) => {
           setSubjects((prev) => [...prev, sub]);
+          fetchSubjects()
         })
         .finally(() => setFormLoading(false));
     },
   });
 
   function fetchSubjects() {
+    console.log('fdfa')
     setLoading(true);
     getAllSubjectsService()
-      .catch((err) => {
-        setLoading(false);
-        setError(err);
-      })
+      // .catch((err) => {
+      //   setLoading(false);
+      //   setError(err);
+      // })
       .then((data) => {
         setSubjects(data);
       })
@@ -80,13 +88,14 @@ export function LessonListPage() {
         </Button>
       </Box>
       <Divider />
-      {subjects && (
+      {!!subjects && (
         <List>
           {subjects.map((subject) => (
-            <LessonListPage key={subject.id} />
+            <LessonListItem key={subject.id} name={subject.name} />
           ))}
         </List>
       )}
+      <Button onClick={fetchSubjects}>fadafd</Button>
     </Flex>
   );
 }
