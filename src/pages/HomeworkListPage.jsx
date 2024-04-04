@@ -1,13 +1,10 @@
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
   Flex,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverHeader,
-  PopoverBody,
-  PopoverCloseButton,
+  MenuItem,
+  Menu,
+  MenuButton,
+  MenuList,
   Box,
   ListItem,
   IconButton,
@@ -51,29 +48,20 @@ export function HomeworkListPage() {
             >
               <Text>subeject of the homework</Text>
               <Text>Due date</Text>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="gray"
+                  aria-label="See menu"
+                  icon={<BsThreeDotsVertical />}
+                />
 
-              <Popover>
-                <PopoverTrigger>
-                  <IconButton icon={<BsThreeDotsVertical />} />
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader>Editor</PopoverHeader>
-                  <PopoverBody
-                    gap={1}
-                    display={'flex'}
-                    flexDirection={'column'}
-                  >
-                    <Button colorScheme="white" variant={'ghost'}>
-                      Edit
-                    </Button>
-                    <Button colorScheme="red" variant={'solid'}>
-                      Delete
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
+                <MenuList>
+                  <MenuItem>Edit</MenuItem>
+                  <MenuItem color="red.400">Delete</MenuItem>
+                </MenuList>
+              </Menu>
             </CardBody>
           </Card>
         </ListItem>
@@ -88,28 +76,20 @@ export function HomeworkListPage() {
               <Text>subeject of the homework</Text>
               <Text>Due date</Text>
 
-              <Popover>
-                <PopoverTrigger>
-                  <IconButton icon={<BsThreeDotsVertical />} />
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader>Editor</PopoverHeader>
-                  <PopoverBody
-                    gap={1}
-                    display={'flex'}
-                    flexDirection={'column'}
-                  >
-                    <Button colorScheme="white" variant={'ghost'}>
-                      Edit
-                    </Button>
-                    <Button colorScheme="red" variant={'solid'}>
-                      Delete
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="gray"
+                  aria-label="See menu"
+                  icon={<BsThreeDotsVertical />}
+                />
+
+                <MenuList>
+                  <MenuItem>Edit</MenuItem>
+                  <MenuItem color="red.400">Delete</MenuItem>
+                </MenuList>
+              </Menu>
             </CardBody>
           </Card>
         </ListItem>
@@ -123,28 +103,20 @@ export function HomeworkListPage() {
             >
               <Text>subeject of the homework</Text>
               <Text>Due date</Text>
-              <Popover>
-                <PopoverTrigger>
-                  <IconButton icon={<BsThreeDotsVertical />} />
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader>Editor</PopoverHeader>
-                  <PopoverBody
-                    gap={1}
-                    display={'flex'}
-                    flexDirection={'column'}
-                  >
-                    <Button colorScheme="white" variant={'ghost'}>
-                      Edit
-                    </Button>
-                    <Button colorScheme="red" variant={'solid'}>
-                      Delete
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover> 
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="gray"
+                  aria-label="See menu"
+                  icon={<BsThreeDotsVertical />}
+                />
+
+                <MenuList>
+                  <MenuItem>Edit</MenuItem>
+                  <MenuItem color="red.400">Delete</MenuItem>
+                </MenuList>
+              </Menu>
             </CardBody>
           </Card>
         </ListItem>
