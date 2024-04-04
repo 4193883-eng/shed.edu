@@ -1,12 +1,23 @@
-import { Box, Button, Divider, Flex, Heading, List } from '@chakra-ui/react';
+import {
+  AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  List,
+  UnorderedList
+} from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField.jsx';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   createSubjectService,
   getAllSubjectsService,
 } from '../services/subjectsServices.js';
+import {LessonListItem} from "../components/LessonListItem.jsx";
 
 const validationSchema = yup.object().shape({
   subjectName: yup.string().min(3, 'The subject name is too short'),
@@ -17,6 +28,8 @@ export function LessonListPage() {
   const [isLoading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState(null);
   const [error, setError] = useState(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const cancelRef = useRef()
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +51,10 @@ export function LessonListPage() {
     },
   });
 
+  useEffect(() => {
+    fetchSubjects()
+  }, []);
+
   function fetchSubjects() {
     setLoading(true);
     getAllSubjectsService()
@@ -54,6 +71,33 @@ export function LessonListPage() {
   }
 
   return (
+    <>
+      <AlertDialog
+        isOpen={isAlertOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setIsAlertOpen(false)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete Customer
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={() => setIsAlertOpen(false)}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={() => setIsAlertOpen(false)} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     <Flex
       justifyContent={'center'}
       flexDir={'column'}
@@ -81,12 +125,13 @@ export function LessonListPage() {
       </Box>
       <Divider />
       {subjects && (
-        <List>
+        <UnorderedList width={'100%'} maxW={'500px'}>
           {subjects.map((subject) => (
-            <LessonListPage key={subject.id} />
+            <LessonListItem key={subject.id} subjectName={subject.name} />
           ))}
-        </List>
+        </UnorderedList>
       )}
     </Flex>
+    </>
   );
 }
