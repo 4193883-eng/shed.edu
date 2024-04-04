@@ -8,7 +8,6 @@ const initialState = {
   authToken: null,
 };
 
-// eslint-disable-next-line no-unused-vars
 const authReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setAuthTokenAction, (state, action) => {
