@@ -14,7 +14,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import {useEffect, useRef, useState} from 'react';
 import {
-  createSubjectService,
+  createSubjectService, deleteSubjectService,
   getAllSubjectsService,
 } from '../services/subjectsServices.js';
 import {LessonListItem} from "../components/LessonListItem.jsx";
@@ -31,6 +31,11 @@ export function LessonListPage() {
   const [error, setError] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const cancelRef = useRef()
+
+  function handleSubmit(id){
+    setLoading(true);
+    deleteSubjectService(id).then(() => {})
+  }
 
   useEffect(() => {
     fetchSubjects()
@@ -117,7 +122,7 @@ export function LessonListPage() {
       mt={0}
     >
       <Heading alignSelf={'start'}>Subject List</Heading>
-      <Box as={'form'} w={'100%'}>
+      <Box as={'form'} w={'100%'} onSubmit={formik.handleSubmit}>
         <InputField
           meta={formik.getFieldMeta('subjectName')}
           label={'Subject Name'}
@@ -134,7 +139,7 @@ export function LessonListPage() {
       {!!subjects && (
         <UnorderedList width={'100%'} maxW={'500px'}>
           {subjects.map((subject) => (
-            <LessonListItem key={subject.id} subjectName={subject.name} />
+            <LessonListItem key={subject.id} subjectName={subject.name} id={subject.id} onDelete={handleSubmit} />
           ))}
         </UnorderedList>
       )}

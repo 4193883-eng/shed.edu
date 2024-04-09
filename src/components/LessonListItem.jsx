@@ -1,8 +1,7 @@
 import {IconButton, ListItem, Menu, MenuButton, MenuItem, MenuList} from '@chakra-ui/react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import {Link} from "react-router-dom";
 
-export function LessonListItem({ subjectName }) {
+export function LessonListItem({ subjectName, id,  onDelete }) {
   return (
     <ListItem
       display={'flex'}
@@ -25,7 +24,7 @@ export function LessonListItem({ subjectName }) {
           <MenuItem >
             Edit
           </MenuItem>
-          <MenuItem color="red.400" onClick={() => {}}>
+          <MenuItem color="red.400" onClick={() => { onDelete(id) }}>
             Delete
           </MenuItem>
         </MenuList>
