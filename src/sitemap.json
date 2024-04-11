@@ -7,5 +7,5 @@
   "/profile": "Profile Page",
   "/news": "News Feed Page",
   "/news/:id": "Article Page",
-  "/shedule": "Schedule Page"
+  "/schedule": "Schedule Page"
 }

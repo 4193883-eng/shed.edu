@@ -23,7 +23,7 @@ import { IoClose } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { flushAuthTokenAction } from '../../redux/auth/authActions.js';
 
-export function Sidebar({ isOpen = false, onClose }) {
+export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
   const dispatch = useDispatch();
   return (
     <Drawer placement={'left'} isOpen={isOpen} onClose={onClose}>
@@ -47,85 +47,95 @@ export function Sidebar({ isOpen = false, onClose }) {
         </DrawerHeader>
         <DrawerBody>
           <Flex flexDirection={'column'}>
-            <Button
-              leftIcon={<FaHome size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              sizeIcon={'10'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/'}
-            >
-              Home
-            </Button>
-            <Button
-              leftIcon={<FaAddressCard size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/signup'}
-            >
-              Register
-            </Button>
-            <Button
-              leftIcon={<FaArrowRightToBracket size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/signin'}
-            >
-              Log in
-            </Button>
-            <Button
-              leftIcon={<FaRegCalendarAlt size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/shedule'}
-            >
-              Schedule
-            </Button>
-            <Button
-              leftIcon={<FaPersonChalkboard size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/lesson-list'}
-            >
-              Lesson List
-            </Button>
-            <Button
-              leftIcon={<MdBallot size={'25px'} />}
-              fontWeight={'400'}
-              fontFamily={'B612 Mono", monospace'}
-              marginBottom={'10px'}
-              paddingLeft={'10px'}
-              justifyContent={'start'}
-              variant="ghost"
-              as={Link}
-              to={'/hw-list'}
-            >
-              HomeWork List
-            </Button>
+            {isLoggedIn && (
+              <>
+                {' '}
+                <Button
+                  leftIcon={<FaHome size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  sizeIcon={'10'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/'}
+                >
+                  Home
+                </Button>
+                <Button
+                  leftIcon={<FaRegCalendarAlt size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/shedule'}
+                >
+                  Schedule
+                </Button>
+                <Button
+                  leftIcon={<FaPersonChalkboard size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/lesson-list'}
+                >
+                  Subject List
+                </Button>
+                <Button
+                  leftIcon={<MdBallot size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/hw-list'}
+                >
+                  Homework List
+                </Button>{' '}
+              </>
+            )}
+
+            {isLoggedIn === false && (
+              <>
+                <Button
+                  leftIcon={<FaAddressCard size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/signup'}
+                >
+                  Register
+                </Button>
+                <Button
+                  leftIcon={<FaArrowRightToBracket size={'25px'} />}
+                  fontWeight={'400'}
+                  fontFamily={'B612 Mono", monospace'}
+                  marginBottom={'10px'}
+                  paddingLeft={'10px'}
+                  justifyContent={'start'}
+                  variant="ghost"
+                  as={Link}
+                  to={'/signin'}
+                >
+                  Log in
+                </Button>{' '}
+              </>
+            )}
           </Flex>
         </DrawerBody>
         <DrawerFooter>
@@ -137,6 +147,7 @@ export function Sidebar({ isOpen = false, onClose }) {
             icon={<FaArrowRightFromBracket size={'20px'} />}
             as={Link}
             to={'/'}
+            aria-label={'logout button'}
           ></IconButton>
         </DrawerFooter>
       </DrawerContent>

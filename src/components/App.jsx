@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { HomeworkListPage } from '../pages/HomeworkListPage.jsx';
 import { LessonListPage } from '../pages/LessonListPage.jsx';
-import { ShedulePage } from '../pages/ShedulePage.jsx';
+import { SchedulePage } from '../pages/SchedulePage.jsx';
 import LoginPage from '../pages/auth/LoginPage';
 import HomePage from '../pages/HomePage';
 import { RootLayout } from '../layouts/RootLayout.jsx';
@@ -42,10 +42,10 @@ function App() {
         />
 
         <Route
-          path="/shedule"
+          path="/schedule"
           element={
             <PrivateRoute>
-              <ShedulePage />
+              <SchedulePage />
             </PrivateRoute>
           }
         />
