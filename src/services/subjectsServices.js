@@ -12,8 +12,8 @@ export function getSubjectService(subjectId) {
   return axios.get(`/subjects/${subjectId}`);
 }
 
-export function amendSubjectService(subjectId, subject) {
-  return axios.put(`/subjects/${subjectId}`, subject);
+export function amendSubjectService(subjectId, subjectName) {
+  return axios.put(`/subjects/${subjectId}`, { name: subjectName });
 }
 
 export function deleteSubjectService(subjectId) {

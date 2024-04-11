@@ -7,11 +7,11 @@ import {
   Flex,
   Heading,
   List,
-  UnorderedList
+  UnorderedList, useToast
 } from '@chakra-ui/react';
-import { InputField } from '../components/auth/InputField.jsx';
+import {InputField} from '../components/auth/InputField.jsx';
 import * as yup from 'yup';
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 import {useEffect, useRef, useState} from 'react';
 import {
   createSubjectService, deleteSubjectService,
@@ -32,9 +32,18 @@ export function LessonListPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const cancelRef = useRef()
 
-  function handleSubmit(id){
-    setLoading(true);
-    deleteSubjectService(id).then(() => {})
+  function handleDelete(id) {
+    setSubjects((prev) => prev.filter((subject) => id !== subject.id))
+    fetchSubjects()
+  }
+
+  function handleEdit(id, subjectName) {
+    setSubjects((prev) => prev.map((subject) => {
+      const newSubject = JSON.parse(JSON.stringify(subject))
+      newSubject.name = subjectName
+      return id === subject.id? newSubject: subject
+    }))
+    fetchSubjects()
   }
 
   useEffect(() => {
@@ -110,41 +119,41 @@ export function LessonListPage() {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    <Flex
-      justifyContent={'center'}
-      flexDir={'column'}
-      alignItems={'center'}
-      pt={16}
-      width={'100%'}
-      maxW={'700px'}
-      gap={4}
-      m={'auto'}
-      mt={0}
-    >
-      <Heading alignSelf={'start'}>Subject List</Heading>
-      <Box as={'form'} w={'100%'} onSubmit={formik.handleSubmit}>
-        <InputField
-          meta={formik.getFieldMeta('subjectName')}
-          label={'Subject Name'}
-          required={false}
-          placeholder={'Subject Name'}
-          disabled={isLoading}
-          {...formik.getFieldProps('subjectName')}
-        />
-        <Button isLoading={isFormLoading} type={'submit'} mt={2}>
-          Add Subject
-        </Button>
-      </Box>
-      <Divider />
-      {!!subjects && (
-        <UnorderedList width={'100%'} maxW={'500px'}>
-          {subjects.map((subject) => (
-            <LessonListItem key={subject.id} subjectName={subject.name} id={subject.id} onDelete={handleSubmit} />
-          ))}
-        </UnorderedList>
-      )}
-      <Button onClick={fetchSubjects}>fadafd</Button>
-    </Flex>
+      <Flex
+        justifyContent={'center'}
+        flexDir={'column'}
+        alignItems={'center'}
+        pt={16}
+        width={'100%'}
+        maxW={'700px'}
+        gap={4}
+        m={'auto'}
+        mt={0}
+        p={4}
+      >
+        <Heading alignSelf={'start'}>Subject List</Heading>
+        <Box as={'form'} w={'100%'} onSubmit={formik.handleSubmit}>
+          <InputField
+            meta={formik.getFieldMeta('subjectName')}
+            label={'Subject Name'}
+            required={false}
+            placeholder={'Subject Name'}
+            disabled={isLoading}
+            {...formik.getFieldProps('subjectName')}
+          />
+          <Button isLoading={isFormLoading} type={'submit'} mt={2}>
+            Add Subject
+          </Button>
+        </Box>
+        <Divider/>
+        {!!subjects && (
+          <UnorderedList width={'100%'} maxW={'500px'}>
+            {subjects.sort((a,b) => a.id - b.id).map((subject) => (
+              <LessonListItem key={subject.id} subjectName={subject.name} id={subject.id} onDelete={handleDelete} onEdit={handleEdit}/>
+            ))}
+          </UnorderedList>
+        )}
+      </Flex>
     </>
   );
 }

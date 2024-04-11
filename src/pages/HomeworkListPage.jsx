@@ -1,4 +1,6 @@
-import { BsFileEarmarkImage, BsThreeDotsVertical } from 'react-icons/bs';
+import PropTypes from 'prop-types';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useRef } from 'react';
 import {
   Flex,
   MenuItem,
@@ -14,9 +16,6 @@ import {
   Text,
   Heading,
   List,
-  FormControl,
-  FormLabel,
-  Select,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -169,71 +168,84 @@ export function HomeworkListPage() {
                     icon={<BsThreeDotsVertical />}
                   />
 
-                  <MenuList>
-                    <MenuItem>Edit</MenuItem>
-                    <MenuItem color="red.400">Delete</MenuItem>
-                  </MenuList>
-                </Menu>
-              </CardBody>
-            </Card>
-          </ListItem>
-          <ListItem maxW={'500px'} w={'100%'}>
-            <Card>
-              <CardBody
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                p={'5'}
-                display={'flex'}
-              >
-                <Text>subeject of the homework</Text>
-                <Text>Due date</Text>
+function HomeworkListItem({
+  title,
+  desctiption,
+  id,
+  grade,
+  updatedAt,
+  createAt,
+  dueDate,
+  subjectid,
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const moreButton = useRef();
+  const icon = useRef();
 
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="See menu"
-                    icon={<BsThreeDotsVertical />}
-                  />
+  function handleOpening(e) {
+    if (
+      e.target != moreButton.current &&
+      e.target != icon.current.childNodes[0]
+    ) {
+      onOpen();
+    }
+  }
 
-                  <MenuList>
-                    <MenuItem>Edit</MenuItem>
-                    <MenuItem color="red.400">Delete</MenuItem>
-                  </MenuList>
-                </Menu>
-              </CardBody>
-            </Card>
-          </ListItem>
-          <ListItem maxW={'500px'} w={'100%'}>
-            <Card>
-              <CardBody
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                p={'5'}
-                display={'flex'}
-              >
-                <Text>subeject of the homework</Text>
-                <Text>Due date</Text>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="See menu"
-                    icon={<BsThreeDotsVertical />}
-                  />
+  return (
+    <>
+      <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody></ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
-                  <MenuList>
-                    <MenuItem>Edit</MenuItem>
-                    <MenuItem color="red.400">Delete</MenuItem>
-                  </MenuList>
-                </Menu>
-              </CardBody>
-            </Card>
-          </ListItem>
-        </List>
-      </Flex>
-    </div>
+      <ListItem maxW={'500px'} w={'100%'}>
+        <Card>
+          <CardBody
+            onClick={handleOpening}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+            p={'5'}
+            display={'flex'}
+          >
+            <Text>subeject of the homework</Text>
+            <Text>Due date</Text>
+
+            <Menu>
+              <MenuButton
+                ref={moreButton}
+                as={IconButton}
+                variant="ghost"
+                colorScheme="gray"
+                aria-label="See menu"
+                icon={<BsThreeDotsVertical ref={icon} />}
+              />
+
+              <MenuList>
+                <MenuItem>Edit</MenuItem>
+                <MenuItem color="red.400">Delete</MenuItem>
+              </MenuList>
+            </Menu>
+          </CardBody>
+        </Card>
+      </ListItem>
+    </>
   );
 }
+
+HomeworkListItem.propTypes = {
+  id: PropTypes.number,
+  createdAt: PropTypes.string,
+  updatedAt: PropTypes.string,
+  dueDate: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  grade: PropTypes.number,
+  subjectid: PropTypes.number,
+};

@@ -13,7 +13,7 @@ export function RootLayout() {
   return (
     <Flex flexDirection={'column'} height={'100vh'}>
       <Navbar isLoggedIn={!!authToken} onOpen={() => setIsSideBarOpen(true)} />
-      <Sidebar isOpen={isSideBarOpen} onClose={() => setIsSideBarOpen(false)} />
+      <Sidebar isOpen={isSideBarOpen} isLoggedIn={!!authToken} onClose={() => setIsSideBarOpen(false)} />
       <Outlet />
     </Flex>
   );
