@@ -24,12 +24,22 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  FormControl,
+  FormLabel,
+  Select,
+  UnorderedList,
 } from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { DateInput } from '../components/auth/DateInput';
 import { useState } from 'react';
+import {
+  getAllHomeworksService,
+  createHomeworkService,
+} from '../services/homeWorksServices';
+import { useEffect } from 'react';
+import { getAllSubjectsService } from '../services/subjectsServices';
 
 const validationSchema = yup.object().shape({
   title: yup.string().min(3, 'Title is too short').max(50, 'Title is too long'),
@@ -39,7 +49,9 @@ const validationSchema = yup.object().shape({
 });
 export function HomeworkListPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [hw, setHw] = useState(null);
+  const [hws, setHws] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [subjects, setSubjects] = useState(null);
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -49,22 +61,54 @@ export function HomeworkListPage() {
     },
     validationSchema,
     onSubmit: (values) => {
-      createHomeWorkService({
-        title: values.title,
-        description: values.description,
-        dueDate: values.dueDate,
-        subjectId: values.subjectId,
-      })
+      const data = {
+        // title: values.title,
+        // description: values.description,
+        // dueDate: values.dueDate,
+        // subjectId: parseInt(values.subjectId),
+        // grade: 12,
+        dueDate: '2024-05-19T18:37:53.345Z',
+        title: 'Finish first task',
+        description: 'Some test description',
+        grade: 12,
+        subjectId: 8,
+      };
+      console.log(data);
+      createHomeworkService(data)
         // .catch((err) => {
         //   setError(err);
         // })
         .then((sub) => {
           setHw((prev) => [...prev, sub]);
-          fetchSubjects();
+          fetchHomeworks();
         });
       // .finally(() => setFormLoading(false));
     },
   });
+  function fetchHomeworks() {
+    setLoading(true);
+    getAllHomeworksService()
+      .then((data) => {
+        setHws(data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+  function fetchSubjects() {
+    setLoading(true);
+    getAllSubjectsService()
+      .then((data) => {
+        setSubjects(data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+  useEffect(() => {
+    fetchHomeworks();
+    fetchSubjects();
+  }, []);
 
   return (
     <div>
@@ -80,17 +124,18 @@ export function HomeworkListPage() {
         mt={4}
       >
         <Heading>HomeWork List</Heading>
-        <Box>
-          <Button type="submit" mt={2} onClick={onOpen}>
-            Create Homework
-          </Button>
-          <Modal onClose={onClose} size="xl" isOpen={isOpen}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Create</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                {' '}
+
+        <Button type="submit" mt={2} onClick={onOpen}>
+          Create Homework
+        </Button>
+        <Modal onClose={onClose} size="xl" isOpen={isOpen}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Create</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {' '}
+              <Box as="form">
                 <InputField
                   meta={formik.getFieldMeta('title')}
                   label={'Title'}
@@ -99,6 +144,7 @@ export function HomeworkListPage() {
                   disabled={false}
                   {...formik.getFieldProps('title')}
                 />
+
                 <InputField
                   meta={formik.getFieldMeta('description')}
                   label={'Description'}
@@ -128,20 +174,28 @@ export function HomeworkListPage() {
                     placeholder="Select subject"
                     {...formik.getFieldProps('subjectId')}
                   >
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
+                    {!!subjects &&
+                      subjects.sort().map((subject) => {
+                        return (
+                          <option value={subject.id} key={subject.id}>
+                            {subject.name}
+                          </option>
+                        );
+                      })}
                   </Select>
                 </FormControl>
-              </ModalBody>
-              <ModalFooter>
+              </Box>
+            </ModalBody>
+            <ModalFooter>
+              <Box as="form" onSubmit={formik.handleSubmit}>
                 <Button type="submit" m={'auto'}>
                   Create Homework
                 </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
+              </Box>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
         <List
           alignItems={'center'}
           flexDirection={'column'}
@@ -149,24 +203,27 @@ export function HomeworkListPage() {
           width={'100%'}
           gap={'4'}
         >
-          <ListItem maxW={'500px'} w={'100%'}>
-            <Card>
-              <CardBody
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                p={'5'}
-                display={'flex'}
-              >
-                <Text>subeject of the homework</Text>
-                <Text>Due date</Text>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    variant="ghost"
-                    colorScheme="gray"
-                    aria-label="See menu"
-                    icon={<BsThreeDotsVertical />}
-                  />
+          {!!hws && (
+            <UnorderedList width={'100%'} maxW={'500px'}>
+              {hws.map((hw) => (
+                <HomeworkListItem
+                  title={hw.title}
+                  description={hw.description}
+                  id={hw.id}
+                  grade={hw.grade}
+                  updatedAt={hw.updatedAt}
+                  createdAt={hw.createdAt}
+                  dueDate={hw.dueDate}
+                  subjectid={hw.subjectId}
+                />
+              ))}
+            </UnorderedList>
+          )}
+        </List>
+      </Flex>
+    </div>
+  );
+}
 
 function HomeworkListItem({
   title,
@@ -174,9 +231,9 @@ function HomeworkListItem({
   id,
   grade,
   updatedAt,
-  createAt,
+  createdAt,
   dueDate,
-  subjectid,
+  subjectId,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const moreButton = useRef();
