@@ -1,21 +1,21 @@
 import axios from 'axios';
 
-export function getAllHomeWorksService() {
+export function getAllHomeworksService() {
   return axios.get('/homeworks');
 }
 
-export function getHomeWorkService(homeWorkId) {
+export function getHomeworkService(homeWorkId) {
   return axios.get(`/homeworks/${homeWorkId}`);
 }
 
-export function deleteHomeWorkService(homeWorkId) {
+export function deleteHomeworkService(homeWorkId) {
   return axios.delete(`/homeworks/${homeWorkId}`);
 }
 
-export function amendHomeWorkService(homeWorkId, homeWork) {
+export function amendHomeworkService(homeWorkId, homeWork) {
   return axios.put(`/homeworks/${homeWorkId}`, homeWork);
 }
 
-export function createHomeWorkService() {
+export function createHomeworkService() {
   return axios.post('/homeworks');
 }
