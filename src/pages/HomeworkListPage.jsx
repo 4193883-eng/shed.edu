@@ -29,6 +29,7 @@ import {
   FormLabel,
   Select,
   UnorderedList,
+  Divider,
 } from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
@@ -124,18 +125,18 @@ export function HomeworkListPage() {
         justifyContent={'center'}
         flexDir={'column'}
         alignItems={'center'}
-        pt={16}
+        p={4}
         width={'100%'}
         maxW={'700px'}
         gap={4}
         m={'auto'}
-        mt={4}
       >
-        <Heading>HomeWork List</Heading>
-
-        <Button type="submit" mt={2} onClick={onOpen}>
+        <Heading alignSelf={'start'}>Homework List</Heading>
+        <Divider />
+        <Button type="submit" onClick={onOpen}>
           Create Homework
         </Button>
+
         <Modal onClose={onClose} size="xl" isOpen={isOpen}>
           <ModalOverlay />
           <ModalContent>
