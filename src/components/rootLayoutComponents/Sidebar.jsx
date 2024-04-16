@@ -54,7 +54,6 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
                   leftIcon={<FaHome size={'25px'} />}
                   fontWeight={'400'}
                   fontFamily={'B612 Mono", monospace'}
-                  sizeIcon={'10'}
                   marginBottom={'10px'}
                   paddingLeft={'10px'}
                   justifyContent={'start'}

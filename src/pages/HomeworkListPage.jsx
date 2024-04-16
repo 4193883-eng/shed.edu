@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { useRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import {
+  Image,
   Flex,
   MenuItem,
   Menu,
@@ -26,6 +27,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+export const LIST_ITEMS = [
+  {
+    title: 'good',
+    dueDate: '04.08.2222',
+    description: 'bad',
+  },
+  {
+    title: 'dwef',
+    description: 'bawfaefd',
+  },
+];
+
 export function HomeworkListPage() {
   return (
     <Flex
@@ -49,11 +62,16 @@ export function HomeworkListPage() {
         width={'100%'}
         gap={'4'}
       >
-        <HomeworkListItem />
-        <HomeworkListItem />
-        <HomeworkListItem />
-        <HomeworkListItem />
-        <HomeworkListItem />
+        {LIST_ITEMS.map((data, index) => {
+          return (
+            <HomeworkListItem
+              title={data.title}
+              desctiption={data.description}
+              dueDate={data.dueDate}
+              key={index}
+            />
+          );
+        })}
       </List>
     </Flex>
   );
@@ -74,10 +92,7 @@ function HomeworkListItem({
   const icon = useRef();
 
   function handleOpening(e) {
-    if (
-      e.target != moreButton.current &&
-      e.target != icon.current.childNodes[0]
-    ) {
+    if (e.target != moreButton.current && e.target != icon.current) {
       onOpen();
     }
   }
@@ -105,8 +120,8 @@ function HomeworkListItem({
             p={'5'}
             display={'flex'}
           >
-            <Text>subeject of the homework</Text>
-            <Text>Due date</Text>
+            <Text>{title}</Text>
+            <Text>{dueDate}</Text>
 
             <Menu>
               <MenuButton
@@ -115,7 +130,13 @@ function HomeworkListItem({
                 variant="ghost"
                 colorScheme="gray"
                 aria-label="See menu"
-                icon={<BsThreeDotsVertical ref={icon} />}
+                icon={
+                  <Image
+                    src="/dots.svg"
+                    ref={icon}
+                    transform={'rotate(90deg)'}
+                  />
+                }
               />
 
               <MenuList>
