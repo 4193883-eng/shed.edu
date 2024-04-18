@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { forwardRef, useRef } from 'react';
+
+import { useRef } from 'react';
 import {
   Image,
   Flex,
@@ -237,7 +237,7 @@ export function HomeworkListPage() {
 
 function HomeworkListItem({
   title,
-  desctiption,
+  description,
   id,
   grade,
   updatedAt,
@@ -317,5 +317,5 @@ HomeworkListItem.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   grade: PropTypes.number,
-  subjectid: PropTypes.number,
+  subjectId: PropTypes.number,
 };

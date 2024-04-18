@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { SiteLogo } from '../SiteLogo.jsx';
 import { MdBallot } from 'react-icons/md';
-import { FaAddressCard, FaRegCalendarAlt, FaHome } from 'react-icons/fa';
+import { FaAddressCard, FaHome } from 'react-icons/fa';
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -62,19 +62,6 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
                   to={'/'}
                 >
                   Home
-                </Button>
-                <Button
-                  leftIcon={<FaRegCalendarAlt size={'25px'} />}
-                  fontWeight={'400'}
-                  fontFamily={'B612 Mono", monospace'}
-                  marginBottom={'10px'}
-                  paddingLeft={'10px'}
-                  justifyContent={'start'}
-                  variant="ghost"
-                  as={Link}
-                  to={'/shedule'}
-                >
-                  Schedule
                 </Button>
                 <Button
                   leftIcon={<FaPersonChalkboard size={'25px'} />}
@@ -156,5 +143,6 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool,
+  isLoggedIn: PropTypes.bool,
   onClose: PropTypes.func,
 };
