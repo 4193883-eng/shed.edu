@@ -16,6 +16,6 @@ export function amendHomeworkService(homeWorkId, homeWork) {
   return axios.put(`/homeworks/${homeWorkId}`, homeWork);
 }
 
-export function createHomeworkService() {
-  return axios.post('/homeworks');
+export function createHomeworkService(data) {
+  return axios.post('/homeworks', data);
 }
