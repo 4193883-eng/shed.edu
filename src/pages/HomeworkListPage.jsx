@@ -79,7 +79,7 @@ export function HomeworkListPage() {
         //   setError(err);
         // })
         .then((sub) => {
-          setHw((prev) => [...prev, sub]);
+          setHws((prev) => [...prev, sub]);
           fetchHomeworks();
         });
       // .finally(() => setFormLoading(false));
