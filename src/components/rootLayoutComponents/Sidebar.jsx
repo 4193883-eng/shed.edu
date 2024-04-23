@@ -7,13 +7,13 @@ import {
   Flex,
   IconButton,
   Button,
-  DrawerBody,
+  DrawerBody, useColorMode, ButtonGroup,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { SiteLogo } from '../SiteLogo.jsx';
 import { MdBallot } from 'react-icons/md';
-import { FaAddressCard, FaHome } from 'react-icons/fa';
+import {FaAddressCard, FaHome, FaMoon, FaSun} from 'react-icons/fa';
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -25,6 +25,7 @@ import { flushAuthTokenAction } from '../../redux/auth/authActions.js';
 
 export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
   const dispatch = useDispatch();
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Drawer placement={'left'} isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
@@ -124,7 +125,12 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
             )}
           </Flex>
         </DrawerBody>
-        <DrawerFooter>
+        <DrawerFooter as={ButtonGroup}>
+          <IconButton
+            onClick={toggleColorMode}
+            icon={colorMode === 'light'? <FaMoon/>: <FaSun/>}
+            variant={'outline'}
+          />
           <IconButton
             onClick={() => {
               dispatch(flushAuthTokenAction());

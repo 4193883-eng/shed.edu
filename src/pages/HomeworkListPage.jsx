@@ -30,6 +30,12 @@ import {
   Select,
   UnorderedList,
   Divider,
+  ButtonGroup,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper, Spinner,
 } from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
@@ -40,15 +46,20 @@ import {
   getAllHomeworksService,
   createHomeworkService,
   deleteHomeworkService,
+  amendHomeworkService,
 } from '../services/homeWorksServices';
 
 import { getAllSubjectsService } from '../services/subjectsServices';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+import { FaPlus } from 'react-icons/fa6';
 
 const validationSchema = yup.object().shape({
   title: yup.string().min(3, 'Title is too short').max(50, 'Title is too long'),
   description: yup.string().max(300, 'Description is too long'),
   dueDate: yup.date(),
   subjectId: yup.number().positive().integer(),
+  grade: yup.number().positive().integer(),
 });
 
 export function HomeworkListPage() {
@@ -68,7 +79,7 @@ export function HomeworkListPage() {
       const data = {
         title: values.title,
         description: values.description,
-        dueDate: values.dueDate,
+        dueDate: new Date(values.dueDate).toISOString(),
         subjectId: parseInt(values.subjectId),
         grade: 12,
         // dueDate: '2024-05-19T18:37:53.345Z',
@@ -81,9 +92,11 @@ export function HomeworkListPage() {
       createHomeworkService(data).then((sub) => {
         setHws((prev) => [...prev, sub]);
         fetchHomeworks();
+        onClose();
       });
     },
   });
+
   function fetchHomeworks() {
     setLoading(true);
     getAllHomeworksService()
@@ -111,6 +124,7 @@ export function HomeworkListPage() {
     });
     fetchHomeworks(onEdit);
   }
+
   function fetchSubjects() {
     setLoading(true);
     getAllSubjectsService()
@@ -121,6 +135,7 @@ export function HomeworkListPage() {
         setLoading(false);
       });
   }
+
   useEffect(() => {
     fetchHomeworks();
     fetchSubjects();
@@ -138,11 +153,16 @@ export function HomeworkListPage() {
         gap={4}
         m={'auto'}
       >
-        <Heading alignSelf={'start'}>Homework List</Heading>
+        <Flex justifyContent={'space-between'} alignItems={'center'} w={'100%'}>
+          <Heading alignSelf={'start'}>Homework List</Heading>
+          <IconButton
+            aria-label={'add a hw'}
+            icon={<FaPlus />}
+            type="submit"
+            onClick={onOpen}
+          />
+        </Flex>
         <Divider />
-        <Button type="submit" onClick={onOpen}>
-          Create Homework
-        </Button>
 
         <Modal onClose={onClose} size="xl" isOpen={isOpen}>
           <ModalOverlay />
@@ -212,33 +232,44 @@ export function HomeworkListPage() {
           </ModalContent>
         </Modal>
 
-        <List
+        <Box
           alignItems={'center'}
           flexDirection={'column'}
           display={'flex'}
           width={'100%'}
           gap={'4'}
         >
-          {!!hws && (
-            <UnorderedList width={'100%'} maxW={'500px'}>
-              {hws.map((hw) => (
-                <HomeworkListItem
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  title={hw.title}
-                  description={hw.description}
-                  id={hw.id}
-                  grade={hw.grade}
-                  updatedAt={hw.updatedAt}
-                  createdAt={hw.createdAt}
-                  dueDate={hw.dueDate}
-                  subjectid={hw.subjectId}
-                  key={hw.id}
-                />
-              ))}
-            </UnorderedList>
-          )}
-        </List>
+          {!!hws && !!subjects ? (
+            <>
+              {hws.map((hw) => {
+                let name;
+                subjects.map((subject) => {
+                  if (subject.id === hw.subjectId) {
+                    name = subject.name;
+                  }
+                });
+
+                return (
+                  <HomeworkListItem
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    title={hw.title}
+                    description={hw.description}
+                    id={hw.id}
+                    grade={hw.grade}
+                    updatedAt={hw.updatedAt}
+                    createdAt={hw.createdAt}
+                    dueDate={hw.dueDate}
+                    subjectName={name}
+                    key={hw.id}
+                    subjectId={hw.subjectId}
+                    subjects={subjects}
+                  />
+                );
+              })}
+            </>
+          ) : <Spinner size={'xl'}/> }
+        </Box>
       </Flex>
     </div>
   );
@@ -254,13 +285,14 @@ function HomeworkListItem({
   updatedAt,
   createdAt,
   dueDate,
+  subjectName,
   subjectId,
+  subjects,
 }) {
   const editingModal = useDisclosure();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cardBody = useRef();
-  const [subjects, setSubjects] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   function handleOpening(e) {
@@ -281,18 +313,25 @@ function HomeworkListItem({
     initialValues: {
       title: title,
       description: description,
-      dueDate: dueDate,
+      dueDate: new Date(dueDate).toISOString().slice(0, -1),
       subjectId: subjectId,
+      grade: grade,
     },
     validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      const hw = {
+        dueDate: values.dueDate,
+        title: values.title,
+        description: values.description,
+        grade: Number(values.grade),
+        subjectId: values.subjectId,
+      }
+      amendHomeworkService(id,hw ).then(() => {
+        editingModal.onClose();
+        onEdit(hw);
+      });
+    },
   });
-
-  useEffect(() => {
-    getAllSubjectsService().then((data) => {
-      setSubjects(data);
-    });
-  }, []);
 
   return (
     <>
@@ -303,7 +342,7 @@ function HomeworkListItem({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create</ModalHeader>
+          <ModalHeader>Editing &quot;{title}&quot;</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {' '}
@@ -331,6 +370,7 @@ function HomeworkListItem({
                 label={'Date'}
                 required={true}
                 disabled={false}
+                value={dueDate}
                 {...formik.getFieldProps('dueDate')}
               />
               <FormControl
@@ -346,22 +386,47 @@ function HomeworkListItem({
                   placeholder="Select subject"
                   {...formik.getFieldProps('subjectId')}
                 >
-                  {!!subjects &&
-                    subjects.sort().map((subject) => {
-                      return (
-                        <option value={subject.id} key={subject.id}>
-                          {subject.name}
-                        </option>
-                      );
-                    })}
+                  {subjects.map((subject) => {
+                    return (
+                      <option value={subject.id} key={subject.id}>
+                        {subject.name}
+                      </option>
+                    );
+                  })}
                 </Select>
+              </FormControl>
+              <FormControl
+                isRequired={false}
+                isDisabled={false}
+                isInvalid={
+                  !!formik.getFieldMeta('grade').error &&
+                  formik.getFieldMeta('grade').touched
+                }
+              >
+                <FormLabel>Grade</FormLabel>
+                <NumberInput
+                  defaultValue={formik.values.grade}
+                  min={0}
+                  max={12}
+                  value={String(formik.values.grade)}
+                  onChange={(valueAsString, valueAsNumber) =>
+                    formik.setFieldValue('grade', valueAsNumber)
+                  }
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
               </FormControl>
             </Box>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter as={ButtonGroup}>
+            <Button onClick={editingModal.onClose}>Cancel</Button>
             <Box as="form" onSubmit={formik.handleSubmit}>
               <Button type="submit" m={'auto'}>
-                Create Homework
+                Edit Homework
               </Button>
             </Box>
           </ModalFooter>
@@ -371,7 +436,7 @@ function HomeworkListItem({
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader> Viewing {title}</ModalHeader>
+          <ModalHeader> Viewing &quot;{title}&quot;</ModalHeader>
           <ModalCloseButton />
           <ModalBody></ModalBody>
           <ModalFooter>
@@ -379,7 +444,7 @@ function HomeworkListItem({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <ListItem maxW={'500px'} w={'100%'}>
+      <Box maxW={'500px'} w={'100%'}>
         <Card>
           <CardBody
             ref={cardBody}
@@ -388,36 +453,32 @@ function HomeworkListItem({
             justifyContent={'space-between'}
             p={'5'}
             display={'flex'}
+            cursor={'pointer'}
           >
-            <Text>{title}</Text>
-            <Text>{dueDate}</Text>
+            <Flex flexDir={'column'} cursor={'default'}>
+              <Text>{title}</Text>
+              <Text color={'gray.300'}>{subjectName}</Text>
+            </Flex>
 
-            <Menu>
+            <Text cursor={'default'}>due in {formatDistanceToNow(new Date(dueDate))}</Text>
+
+            <Menu cursor={'default'}>
               <MenuButton
                 isLoading={isLoading}
-                // ref={moreButton}
                 as={IconButton}
                 variant="ghost"
                 colorScheme="gray"
                 aria-label="See menu"
-                icon={
-                  <Image
-                    src="/dots.svg"
-                    // ref={icon}
-                    transform={'rotate(90deg)'}
-                  />
-                }
+                icon={<BsThreeDotsVertical />}
               />
 
               <MenuList>
                 <MenuItem
-                  //  ref={edit}
                   onClick={editingModal.onOpen}
                 >
                   Edit
                 </MenuItem>
                 <MenuItem
-                  // ref={deleteHw}
                   color="red.400"
                   onClick={handleDeleting}
                 >
@@ -427,7 +488,7 @@ function HomeworkListItem({
             </Menu>
           </CardBody>
         </Card>
-      </ListItem>
+      </Box>
     </>
   );
 }
@@ -442,5 +503,6 @@ HomeworkListItem.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   grade: PropTypes.number,
-  subjectId: PropTypes.number,
+  subjectName: PropTypes.string,
+  subjects: PropTypes.array,
 };

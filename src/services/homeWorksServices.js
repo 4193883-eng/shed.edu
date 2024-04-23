@@ -12,8 +12,8 @@ export function deleteHomeworkService(homeWorkId) {
   return axios.delete(`/homeworks/${homeWorkId}`);
 }
 
-export function amendHomeworkService(homeWorkId, homeWork) {
-  return axios.put(`/homeworks/${homeWorkId}`, homeWork);
+export function amendHomeworkService(homeWorkId, homework) {
+  return axios.put(`/homeworks/${homeWorkId}`, homework);
 }
 
 export function createHomeworkService(data) {

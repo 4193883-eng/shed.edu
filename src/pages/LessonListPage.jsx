@@ -6,7 +6,7 @@ import {
   Divider,
   Flex,
   Heading,
-  List,
+  List, Spinner,
   UnorderedList, useToast
 } from '@chakra-ui/react';
 import {InputField} from '../components/auth/InputField.jsx';
@@ -146,13 +146,13 @@ export function LessonListPage() {
           </Button>
         </Box>
         <Divider/>
-        {!!subjects && (
+        {!!subjects ? (
           <UnorderedList width={'100%'} maxW={'500px'}>
             {subjects.sort((a,b) => a.id - b.id).map((subject) => (
               <LessonListItem key={subject.id} subjectName={subject.name} id={subject.id} onDelete={handleDelete} onEdit={handleEdit}/>
             ))}
           </UnorderedList>
-        )}
+        ): <Spinner size={'xl'}/>}
       </Flex>
     </>
   );
