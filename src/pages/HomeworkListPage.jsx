@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import { useRef, useState, useEffect } from 'react';
 import {
+  ListIcon,
   Image,
   Flex,
   MenuItem,
@@ -35,8 +36,12 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper, Spinner,
+  NumberDecrementStepper,
+  Spinner,
+  useColorMode,
 } from '@chakra-ui/react';
+import { marked } from 'marked';
+import dompure from 'dompurify';
 import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -53,6 +58,7 @@ import { getAllSubjectsService } from '../services/subjectsServices';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { FaPlus } from 'react-icons/fa6';
+import { format } from 'date-fns';
 
 const validationSchema = yup.object().shape({
   title: yup.string().min(3, 'Title is too short').max(50, 'Title is too long'),
@@ -268,7 +274,9 @@ export function HomeworkListPage() {
                 );
               })}
             </>
-          ) : <Spinner size={'xl'}/> }
+          ) : (
+            <Spinner size={'xl'} />
+          )}
         </Box>
       </Flex>
     </div>
@@ -325,8 +333,8 @@ function HomeworkListItem({
         description: values.description,
         grade: Number(values.grade),
         subjectId: values.subjectId,
-      }
-      amendHomeworkService(id,hw ).then(() => {
+      };
+      amendHomeworkService(id, hw).then(() => {
         editingModal.onClose();
         onEdit(hw);
       });
@@ -436,9 +444,23 @@ function HomeworkListItem({
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader> Viewing &quot;{title}&quot;</ModalHeader>
+          <ModalHeader as={ButtonGroup} alignItems={'center'} display={'flex'}>
+            <Text>{title}</Text>
+            <Text fontSize={'sm'}>|</Text>
+            <Text color={'gray.300'}>{subjectName}</Text>
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody flexDir={'column'} as={Flex}>
+            <Text color={'gray.300'}>
+              Due at {format(new Date(dueDate), 'dd/MM/yyyy kk:mm')}
+            </Text>
+            <ParsedMarkdown value={description}
+            
+             />
+            <Text alignSelf={'flex-end'} color={'gray.300'}>
+              Grade: {grade}
+            </Text>
+          </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
           </ModalFooter>
@@ -460,7 +482,9 @@ function HomeworkListItem({
               <Text color={'gray.300'}>{subjectName}</Text>
             </Flex>
 
-            <Text cursor={'default'}>due in {formatDistanceToNow(new Date(dueDate))}</Text>
+            <Text cursor={'default'}>
+              due in {formatDistanceToNow(new Date(dueDate))}
+            </Text>
 
             <Menu cursor={'default'}>
               <MenuButton
@@ -473,15 +497,8 @@ function HomeworkListItem({
               />
 
               <MenuList>
-                <MenuItem
-                  onClick={editingModal.onOpen}
-                >
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  color="red.400"
-                  onClick={handleDeleting}
-                >
+                <MenuItem onClick={editingModal.onOpen}>Edit</MenuItem>
+                <MenuItem color="red.400" onClick={handleDeleting}>
                   Delete
                 </MenuItem>
               </MenuList>
@@ -492,6 +509,75 @@ function HomeworkListItem({
     </>
   );
 }
+
+export function ParsedMarkdown({ value }) {
+  const { colorMode } = useColorMode();
+  return (
+    <Box
+      sx={{
+        '& h1': {
+          fontSize: '3xl',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& h2': {
+          fontSize: '2xl',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& h3': {
+          fontSize: 'xl',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& h4': {
+          fontSize: 'lg',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& h5': {
+          fontSize: 'md',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& h6': {
+          fontSize: 'sm',
+          fontWeight: '700',
+          my: '8px',
+        },
+        '& ul, & ol': {
+          my: '8px',
+          pl: '30px',
+        },
+        '& blockquote': {
+          borderLeftWidth: '4px',
+          color: 'gray.500',
+          px: '8px',
+          my: '8px',
+        },
+        '& code': {
+          padding: '3px 5px',
+          backgroundColor: colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.100',
+          borderRadius: 'md',
+          my: '8px',
+        },
+        '& p': {
+          my: '8px',
+        },
+        '& hr': {
+          my: '16px',
+        },
+      }}
+      dangerouslySetInnerHTML={{
+        __html: dompure.sanitize(marked.parse(value)),
+      }}
+    />
+  );
+}
+
+ParsedMarkdown.propTypes = {
+  value: PropTypes.string.isRequired,
+};
 
 HomeworkListItem.propTypes = {
   onEdit: PropTypes.func,
