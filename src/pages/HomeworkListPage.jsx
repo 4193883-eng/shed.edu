@@ -2,21 +2,18 @@ import PropTypes from 'prop-types';
 
 import { useRef, useState, useEffect } from 'react';
 import {
-  Image,
   Flex,
   MenuItem,
   Menu,
   MenuButton,
   MenuList,
   Box,
-  ListItem,
   IconButton,
   Card,
   CardBody,
   Button,
   Text,
   Heading,
-  List,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -28,7 +25,6 @@ import {
   FormControl,
   FormLabel,
   Select,
-  UnorderedList,
   Divider,
   ButtonGroup,
   NumberInput,
@@ -240,7 +236,7 @@ export function HomeworkListPage() {
           width={'100%'}
           gap={'4'}
         >
-          {!!hws && !!subjects ? (
+          {!!hws && !!subjects && !isLoading ? (
             <>
               {hws.map((hw) => {
                 let name;
@@ -283,8 +279,6 @@ function HomeworkListItem({
   description,
   id,
   grade,
-  updatedAt,
-  createdAt,
   dueDate,
   subjectName,
   subjectId,
@@ -297,7 +291,7 @@ function HomeworkListItem({
   const [isLoading, setIsLoading] = useState(false);
 
   function handleOpening(e) {
-    if (e.target == cardBody.current) {
+    if (e.target === cardBody.current) {
       onOpen();
     }
   }
