@@ -55,7 +55,7 @@ export function LessonListPage() {
       subjectName: '',
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       setFormLoading(true);
       createSubjectService({
         name: values.subjectName,
@@ -66,6 +66,7 @@ export function LessonListPage() {
         .then((sub) => {
           setSubjects((prev) => [...prev, sub]);
           fetchSubjects()
+          resetForm()
         })
         .finally(() => setFormLoading(false));
     },

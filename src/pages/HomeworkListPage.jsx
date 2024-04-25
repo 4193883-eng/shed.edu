@@ -75,13 +75,13 @@ export function HomeworkListPage() {
       subjectId: 0,
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const data = {
         title: values.title,
         description: values.description,
         dueDate: new Date(values.dueDate).toISOString(),
         subjectId: parseInt(values.subjectId),
-        grade: 12,
+        grade: 0,
         // dueDate: '2024-05-19T18:37:53.345Z',
         // title: 'Finish first task',
         // description: 'Some test description',
@@ -93,6 +93,7 @@ export function HomeworkListPage() {
         setHws((prev) => [...prev, sub]);
         fetchHomeworks();
         onClose();
+        resetForm()
       });
     },
   });
@@ -318,7 +319,7 @@ function HomeworkListItem({
       grade: grade,
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, {resetForm}) => {
       const hw = {
         dueDate: values.dueDate,
         title: values.title,
@@ -329,6 +330,7 @@ function HomeworkListItem({
       amendHomeworkService(id,hw ).then(() => {
         editingModal.onClose();
         onEdit(hw);
+        resetForm()
       });
     },
   });
