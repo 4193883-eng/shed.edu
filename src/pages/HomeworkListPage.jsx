@@ -41,6 +41,7 @@ import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { DateInput } from '../components/auth/DateInput';
+import { Link } from 'react-router-dom';
 
 import {
   getAllHomeworksService,
@@ -53,7 +54,6 @@ import { getAllSubjectsService } from '../services/subjectsServices';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { FaPlus } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 const validationSchema = yup.object().shape({
@@ -78,7 +78,7 @@ export function HomeworkListPage() {
       subjectId: 0,
     },
     validationSchema,
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       const data = {
         title: values.title,
         description: values.description,
@@ -96,7 +96,7 @@ export function HomeworkListPage() {
         setHws((prev) => [...prev, sub]);
         fetchHomeworks();
         onClose();
-        resetForm()
+        resetForm();
       });
     },
   });
@@ -118,6 +118,7 @@ export function HomeworkListPage() {
         return id === prevHw.id ? hw : prevHw;
       });
     });
+    fetchHomeworks()
   }
 
   function onDelete(id) {
@@ -126,7 +127,7 @@ export function HomeworkListPage() {
         return prevId !== id;
       });
     });
-    fetchHomeworks(onEdit);
+    fetchHomeworks();
   }
 
   function fetchSubjects() {
@@ -141,18 +142,12 @@ export function HomeworkListPage() {
   }
 
   useEffect(() => {
-    getAllSubjectsService().then((subject) => {
-      setHasSubjects(subject.length > 0);
-    });
-  }, []);
-
-  useEffect(() => {
     fetchHomeworks();
     fetchSubjects();
   }, []);
 
-  return (
-    <div>
+  if (subjects !== null && subjects.length === 0) {
+    return (
       <Flex
         justifyContent={'center'}
         flexDir={'column'}
@@ -163,102 +158,129 @@ export function HomeworkListPage() {
         gap={4}
         m={'auto'}
       >
-        <Flex justifyContent={'space-between'} alignItems={'center'} w={'100%'}>
-          <Heading alignSelf={'start'}>Homework List</Heading>
-          <IconButton
-            aria-label={'add a hw'}
-            icon={<FaPlus />}
-            type="submit"
-            onClick={onOpen}
-          />
-        </Flex>
-        <Divider />
-
-        <Modal onClose={onClose} size="xl" isOpen={isOpen}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              {' '}
-              <Box as="form">
-                <InputField
-                  meta={formik.getFieldMeta('title')}
-                  label={'Title'}
-                  required={true}
-                  placeholder={'Title'}
-                  disabled={false}
-                  {...formik.getFieldProps('title')}
-                />
-
-                <InputField
-                  meta={formik.getFieldMeta('description')}
-                  label={'Description'}
-                  required={true}
-                  placeholder={'Description'}
-                  disabled={false}
-                  {...formik.getFieldProps('description')}
-                />
-                <DateInput
-                  placeholder="Date"
-                  meta={formik.getFieldMeta('dueDate')}
-                  label={'Date'}
-                  required={true}
-                  disabled={false}
-                  {...formik.getFieldProps('dueDate')}
-                />
-                <FormControl
-                  isRequired={true}
-                  isDisabled={false}
-                  isInvalid={
-                    !!formik.getFieldMeta('subjectId').error &&
-                    formik.getFieldMeta('subjectId').touched
-                  }
-                >
-                  <FormLabel>Subject</FormLabel>
-                  <Select
-                    placeholder="Select subject"
-                    {...formik.getFieldProps('subjectId')}
-                  >
-                    {!!subjects &&
-                      subjects.sort().map((subject) => {
-                        return (
-                          <option value={subject.id} key={subject.id}>
-                            {subject.name}
-                          </option>
-                        );
-                      })}
-                  </Select>
-                </FormControl>
-              </Box>
-            </ModalBody>
-            <ModalFooter>
-              <Box as="form" onSubmit={formik.handleSubmit}>
-                <Button type="submit" m={'auto'}>
-                  Create Homework
-                </Button>
-              </Box>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-
-        <Box
+        <Box>
+          <Text fontSize={'x-large'}>
+            There are no subjects yet, please add them to make a homework!
+          </Text>
+          <Button as={Link} to={'/lesson-list'} margin={'auto'}>
+            Subject List
+          </Button>
+        </Box>
+      </Flex>
+    );
+  } else {
+    return (
+      <div>
+        <Flex
+          justifyContent={'center'}
+          flexDir={'column'}
           alignItems={'center'}
-          flexDirection={'column'}
-          display={'flex'}
+          p={4}
           width={'100%'}
-          gap={'4'}
+          maxW={'700px'}
+          gap={4}
+          m={'auto'}
         >
-          {!!hws && !!subjects && !isLoading ? 
-          (
-            <>
-              {hws.map((hw) => {
-                let name;
-                subjects.map((subject) => {
-                  if (subject.id === hw.subjectId) {
-                    name = subject.name;
-                  }
-                });
+          <Flex
+            justifyContent={'space-between'}
+            alignItems={'center'}
+            w={'100%'}
+          >
+            <Heading alignSelf={'start'}>Homework List</Heading>
+            <IconButton
+              aria-label={'add a hw'}
+              icon={<FaPlus />}
+              type="submit"
+              onClick={onOpen}
+              disabled={subjects === [] || isLoading}
+            />
+          </Flex>
+          <Divider />
+
+          <Modal onClose={onClose} size="xl" isOpen={isOpen}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Create</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {' '}
+                <Box as="form">
+                  <InputField
+                    meta={formik.getFieldMeta('title')}
+                    label={'Title'}
+                    required={true}
+                    placeholder={'Title'}
+                    disabled={false}
+                    {...formik.getFieldProps('title')}
+                  />
+
+                  <InputField
+                    meta={formik.getFieldMeta('description')}
+                    label={'Description'}
+                    required={true}
+                    placeholder={'Description'}
+                    disabled={false}
+                    {...formik.getFieldProps('description')}
+                  />
+                  <DateInput
+                    placeholder="Date"
+                    meta={formik.getFieldMeta('dueDate')}
+                    label={'Date'}
+                    required={true}
+                    disabled={false}
+                    {...formik.getFieldProps('dueDate')}
+                  />
+                  <FormControl
+                    isRequired={true}
+                    isDisabled={false}
+                    isInvalid={
+                      !!formik.getFieldMeta('subjectId').error &&
+                      formik.getFieldMeta('subjectId').touched
+                    }
+                  >
+                    <FormLabel>Subject</FormLabel>
+                    <Select
+                      placeholder="Select subject"
+                      {...formik.getFieldProps('subjectId')}
+                    >
+                      {!!subjects &&
+                        subjects.sort().map((subject) => {
+                          return (
+                            <option value={subject.id} key={subject.id}>
+                              {subject.name}
+                            </option>
+                          );
+                        })}
+                    </Select>
+                  </FormControl>
+                </Box>
+              </ModalBody>
+              <ModalFooter>
+                <Box as="form" onSubmit={formik.handleSubmit}>
+                  <Button type="submit" m={'auto'}>
+                    Create Homework
+                  </Button>
+                </Box>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <Box
+            alignItems={'center'}
+            flexDirection={'column'}
+            display={'flex'}
+            width={'100%'}
+            gap={'4'}
+          >
+            {!!hws && !!subjects && !isLoading ? (
+              <>
+                {hws.map((hw) => {
+                  let name;
+                  subjects.map((subject) => {
+                    if (subject.id === hw.subjectId) {
+                      name = subject.name;
+                    }
+                  });
 
                   return (
                     <HomeworkListItem
@@ -283,10 +305,10 @@ export function HomeworkListPage() {
               <Spinner size={'xl'} />
             )}
           </Box>
-        
-      </Flex>
-    </div>
-  );
+        </Flex>
+      </div>
+    );
+  }
 }
 
 export function HomeworkListItem({
@@ -330,7 +352,7 @@ export function HomeworkListItem({
       grade: grade,
     },
     validationSchema,
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       const hw = {
         dueDate: values.dueDate,
         title: values.title,
@@ -341,7 +363,7 @@ export function HomeworkListItem({
       amendHomeworkService(id, hw).then(() => {
         editingModal.onClose();
         onEdit(hw);
-        resetForm()
+        resetForm();
       });
     },
   });
@@ -358,7 +380,6 @@ export function HomeworkListItem({
           <ModalHeader>Editing &quot;{title}&quot;</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {' '}
             <Box as="form">
               <InputField
                 meta={formik.getFieldMeta('title')}
@@ -459,12 +480,12 @@ export function HomeworkListItem({
             <Text color={'gray.300'}>
               Due at {format(new Date(dueDate), 'dd/MM/yyyy kk:mm')}
             </Text>
-            <ParsedMarkdown value={description}
-            
-             />
-            <Text alignSelf={'flex-end'} color={'gray.300'}>
-              Grade: {grade}
-            </Text>
+            <ParsedMarkdown value={description} />
+            {!!grade && (
+              <Text alignSelf={'flex-end'} color={'gray.300'}>
+                Grade: {grade}
+              </Text>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
@@ -595,5 +616,6 @@ HomeworkListItem.propTypes = {
   description: PropTypes.string,
   grade: PropTypes.number,
   subjectName: PropTypes.string,
+  subjectId: PropTypes.number,
   subjects: PropTypes.array,
 };

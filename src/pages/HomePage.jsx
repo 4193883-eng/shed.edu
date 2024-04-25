@@ -3,25 +3,25 @@ import {
   Divider,
   Flex,
   Heading,
-  IconButton,
   Button,
   Text,
-  Spinner,
+  Spinner, CircularProgressLabel, CircularProgress,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { HiPlusSm } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
-import { getAllHomeworksService } from '../services/homeWorksServices';
-import { getAllSubjectsService } from '../services/subjectsServices';
-import { HomeworkListItem } from './HomeworkListPage';
+import {Link} from 'react-router-dom';
+import {getAllHomeworksService} from '../services/homeWorksServices';
+import {getAllSubjectsService} from '../services/subjectsServices';
+import {HomeworkListItem} from './HomeworkListPage';
 
 function HomePage() {
   const [hasHomeWork, setHasHomeWork] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [homeWork, setHomeWork] = useState([]);
   const [hws, setHws] = useState(null);
   const [subjects, setSubjects] = useState(null);
+  const [medianGrade, setMedianGrade] = useState(null)
 
   useEffect(() => {
     getAllHomeworksService().then((subjects) => {
@@ -34,6 +34,26 @@ function HomePage() {
       setHomeWork(data);
     });
   }, []);
+
+  useEffect(() => {
+    if (hws === null){
+      return;
+    }
+    let allGrades = [];
+    hws.forEach((hw) => {
+      if (hw.grade !== 0 && hw.grade !== null){
+        allGrades.push(hw.grade)
+      }
+    })
+    let sum = allGrades.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue
+    },0);
+    if (sum === 0){
+      return;
+    }
+    const medGrade = sum/allGrades.length
+    setMedianGrade(medGrade)
+  }, [hws]);
 
   function fetchHomeworks() {
     setIsLoading(true);
@@ -63,6 +83,7 @@ function HomePage() {
         return id === prevHw.id ? hw : prevHw;
       });
     });
+    fetchHomeworks()
   }
 
   function onDelete(id) {
@@ -71,7 +92,7 @@ function HomePage() {
         return prevId !== id;
       });
     });
-    fetchHomeworks(onEdit);
+    fetchHomeworks();
   }
 
   useEffect(() => {
@@ -94,67 +115,69 @@ function HomePage() {
     >
       <Heading alignSelf={'start'}>Home</Heading>
 
-      <Divider />
+      <Divider/>
 
-      <Box>
-        {hasHomeWork ? (
-          <>
-            <Box
-              alignItems={'center'}
-              flexDirection={'column'}
-              display={'flex'}
-              width={'100%'}
-              gap={'4'}
-            >
-              {!!hws && !!subjects ? (
-                <>
-                  {hws.map((hw) => {
-                    let name;
-                    subjects.map((subject) => {
-                      if (subject.id === hw.subjectId) {
-                        name = subject.name;
-                      }
-                    });
+      {hasHomeWork ? (
+        <Box
+          alignItems={'center'}
+          flexDirection={'column'}
+          display={'flex'}
+          width={'100%'}
+          gap={'4'}
+        >
+          {!!hws && !!subjects && !isLoading ? (
+            <>
+              {hws.map((hw) => {
+                let name;
+                subjects.map((subject) => {
+                  if (subject.id === hw.subjectId) {
+                    name = subject.name;
+                  }
+                });
 
-                    return (
-                      <HomeworkListItem
-                        onEdit={onEdit}
-                        onDelete={onDelete}
-                        title={hw.title}
-                        description={hw.description}
-                        id={hw.id}
-                        grade={hw.grade}
-                        updatedAt={hw.updatedAt}
-                        createdAt={hw.createdAt}
-                        dueDate={hw.dueDate}
-                        subjectName={name}
-                        key={hw.id}
-                        subjectId={hw.subjectId}
-                        subjects={subjects}
-                      />
-                    );
-                  })}
-                </>
-              ) : (
-                <Spinner size={'xl'} />
-              )}
-            </Box>
-          </>
-        ) : (
-          <Text fontSize="4xl">There is no homeworks yet</Text>
-        )}
-
-        <Box>
-          <Button as={Link} to={'hw-list'} size="md">
-            Add homework
-          </Button>
-          {homeWork.length > 3 && (
-            <Button as={Link} to={'hw-list'} size="md">
-              See all homeworks
-            </Button>
+                return (
+                  <HomeworkListItem
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    title={hw.title}
+                    description={hw.description}
+                    id={hw.id}
+                    grade={hw.grade}
+                    updatedAt={hw.updatedAt}
+                    createdAt={hw.createdAt}
+                    dueDate={hw.dueDate}
+                    subjectName={name}
+                    key={hw.id}
+                    subjectId={hw.subjectId}
+                    subjects={subjects}
+                  />
+                );
+              })}
+            </>
+          ) : (
+            <Spinner size={'xl'}/>
           )}
         </Box>
+      ) : (
+        <Text fontSize="xl">There are no homeworks yet</Text>
+      )}
+
+      <Box>
+        <Button as={Link} to={'hw-list'} size="md">
+          Add homework
+        </Button>
+        {homeWork.length > 3 && (
+          <Button as={Link} to={'hw-list'} size="md">
+            See all homeworks
+          </Button>
+        )}
       </Box>
+      <Divider/>
+      {hasHomeWork && !!medianGrade &&
+        <CircularProgress value={(100 / 12) * medianGrade} size={'100px'} color='green.400'>
+          <CircularProgressLabel>{medianGrade}</CircularProgressLabel>
+        </CircularProgress>
+      }
     </Flex>
   );
 }
