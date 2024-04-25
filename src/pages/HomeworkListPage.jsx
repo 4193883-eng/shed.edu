@@ -35,7 +35,8 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper, Spinner,
+  NumberDecrementStepper,
+  Spinner,
 } from '@chakra-ui/react';
 import { InputField } from '../components/auth/InputField';
 import * as yup from 'yup';
@@ -53,6 +54,7 @@ import { getAllSubjectsService } from '../services/subjectsServices';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { FaPlus } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 
 const validationSchema = yup.object().shape({
   title: yup.string().min(3, 'Title is too short').max(50, 'Title is too long'),
@@ -67,6 +69,7 @@ export function HomeworkListPage() {
   const [hws, setHws] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState(null);
+  const [hasSubjects, setHasSubjects] = useState([]);
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -135,6 +138,12 @@ export function HomeworkListPage() {
         setLoading(false);
       });
   }
+
+  useEffect(() => {
+    getAllSubjectsService().then((subject) => {
+      setHasSubjects(subject.length > 0);
+    });
+  }, []);
 
   useEffect(() => {
     fetchHomeworks();
@@ -232,50 +241,61 @@ export function HomeworkListPage() {
           </ModalContent>
         </Modal>
 
-        <Box
-          alignItems={'center'}
-          flexDirection={'column'}
-          display={'flex'}
-          width={'100%'}
-          gap={'4'}
-        >
-          {!!hws && !!subjects ? (
-            <>
-              {hws.map((hw) => {
-                let name;
-                subjects.map((subject) => {
-                  if (subject.id === hw.subjectId) {
-                    name = subject.name;
-                  }
-                });
+        {hasSubjects ? (
+          <Box
+            alignItems={'center'}
+            flexDirection={'column'}
+            display={'flex'}
+            width={'100%'}
+            gap={'4'}
+          >
+            {!!hws && !!subjects ? (
+              <>
+                {hws.map((hw) => {
+                  let name;
+                  subjects.map((subject) => {
+                    if (subject.id === hw.subjectId) {
+                      name = subject.name;
+                    }
+                  });
 
-                return (
-                  <HomeworkListItem
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    title={hw.title}
-                    description={hw.description}
-                    id={hw.id}
-                    grade={hw.grade}
-                    updatedAt={hw.updatedAt}
-                    createdAt={hw.createdAt}
-                    dueDate={hw.dueDate}
-                    subjectName={name}
-                    key={hw.id}
-                    subjectId={hw.subjectId}
-                    subjects={subjects}
-                  />
-                );
-              })}
-            </>
-          ) : <Spinner size={'xl'}/> }
-        </Box>
+                  return (
+                    <HomeworkListItem
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      title={hw.title}
+                      description={hw.description}
+                      id={hw.id}
+                      grade={hw.grade}
+                      updatedAt={hw.updatedAt}
+                      createdAt={hw.createdAt}
+                      dueDate={hw.dueDate}
+                      subjectName={name}
+                      key={hw.id}
+                      subjectId={hw.subjectId}
+                      subjects={subjects}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <Spinner size={'xl'} />
+            )}
+          </Box>
+        ) : (
+          <Box>
+            <Text fontSize="4xl">There is no subjects yet</Text>
+            <Button as={Link} to={'/lesson-list'}>
+              Add subject
+            </Button>
+          </Box>
+        )}
       </Flex>
     </div>
   );
 }
 
-function HomeworkListItem({
+export function HomeworkListItem({
   onEdit,
   onDelete,
   title,
@@ -325,8 +345,8 @@ function HomeworkListItem({
         description: values.description,
         grade: Number(values.grade),
         subjectId: values.subjectId,
-      }
-      amendHomeworkService(id,hw ).then(() => {
+      };
+      amendHomeworkService(id, hw).then(() => {
         editingModal.onClose();
         onEdit(hw);
       });
@@ -460,7 +480,9 @@ function HomeworkListItem({
               <Text color={'gray.300'}>{subjectName}</Text>
             </Flex>
 
-            <Text cursor={'default'}>due in {formatDistanceToNow(new Date(dueDate))}</Text>
+            <Text cursor={'default'}>
+              due in {formatDistanceToNow(new Date(dueDate))}
+            </Text>
 
             <Menu cursor={'default'}>
               <MenuButton
@@ -473,15 +495,8 @@ function HomeworkListItem({
               />
 
               <MenuList>
-                <MenuItem
-                  onClick={editingModal.onOpen}
-                >
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  color="red.400"
-                  onClick={handleDeleting}
-                >
+                <MenuItem onClick={editingModal.onOpen}>Edit</MenuItem>
+                <MenuItem color="red.400" onClick={handleDeleting}>
                   Delete
                 </MenuItem>
               </MenuList>
