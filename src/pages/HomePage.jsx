@@ -20,9 +20,9 @@ import PropTypes from 'prop-types';
 import { BsDot } from 'react-icons/bs';
 
 function grade2color(grade) {
-  if (grade >= 8.5) {
+  if (grade >= 8) {
     return 'green.400';
-  } else if (grade < 8.5 && grade >= 5) {
+  } else if (grade < 8 && grade >= 5) {
     return 'yellow.400';
   } else {
     return 'red.500';
@@ -216,7 +216,7 @@ function HomePage() {
         <CircularProgress
           value={(100 / 12) * medianGrades.grade}
           size={'100px'}
-          color="green.400"
+          color={grade2color(medianGrades.grade)}
         >
           <CircularProgressLabel>{medianGrades.grade}</CircularProgressLabel>
         </CircularProgress>
