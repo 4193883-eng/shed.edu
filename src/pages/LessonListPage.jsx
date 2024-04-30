@@ -1,23 +1,27 @@
 import {
-  AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
   AlertDialogOverlay,
   Box,
   Button,
   Divider,
   Flex,
   Heading,
-  List, Spinner,
-  UnorderedList, useToast
+  Spinner,
+  UnorderedList,
 } from '@chakra-ui/react';
-import {InputField} from '../components/auth/InputField.jsx';
+import { InputField } from '../components/auth/InputField.jsx';
 import * as yup from 'yup';
-import {useFormik} from 'formik';
-import {useEffect, useRef, useState} from 'react';
+import { useFormik } from 'formik';
+import { useEffect, useRef, useState } from 'react';
 import {
-  createSubjectService, deleteSubjectService,
+  createSubjectService,
   getAllSubjectsService,
 } from '../services/subjectsServices.js';
-import {LessonListItem} from "../components/LessonListItem.jsx";
+import { LessonListItem } from '../components/LessonListItem.jsx';
 
 const validationSchema = yup.object().shape({
   subjectName: yup.string().min(3, 'The subject name is too short'),
@@ -28,26 +32,27 @@ export function LessonListPage() {
   const [isLoading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState(null);
   // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
-  const [isAlertOpen, setIsAlertOpen] = useState(false)
-  const cancelRef = useRef()
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const cancelRef = useRef();
 
   function handleDelete(id) {
-    setSubjects((prev) => prev.filter((subject) => id !== subject.id))
-    fetchSubjects()
+    setSubjects((prev) => prev.filter((subject) => id !== subject.id));
+    fetchSubjects();
   }
 
   function handleEdit(id, subjectName) {
-    setSubjects((prev) => prev.map((subject) => {
-      const newSubject = JSON.parse(JSON.stringify(subject))
-      newSubject.name = subjectName
-      return id === subject.id? newSubject: subject
-    }))
-    fetchSubjects()
+    setSubjects((prev) =>
+      prev.map((subject) => {
+        const newSubject = JSON.parse(JSON.stringify(subject));
+        newSubject.name = subjectName;
+        return id === subject.id ? newSubject : subject;
+      }),
+    );
+    fetchSubjects();
   }
 
   useEffect(() => {
-    fetchSubjects()
+    fetchSubjects();
   }, []);
 
   const formik = useFormik({
@@ -55,29 +60,26 @@ export function LessonListPage() {
       subjectName: '',
     },
     validationSchema,
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       setFormLoading(true);
+      setSubjects((prev) => [{ name: values.subjectName }, ...prev]);
       createSubjectService({
         name: values.subjectName,
       })
-        .catch((err) => {
-          setError(err);
-        })
-        .then((sub) => {
-          setSubjects((prev) => [...prev, sub]);
-          fetchSubjects()
-          resetForm()
+        .then(() => {
+          fetchSubjects();
+          resetForm();
         })
         .finally(() => setFormLoading(false));
     },
   });
 
   useEffect(() => {
-    fetchSubjects()
+    fetchSubjects();
   }, []);
 
   function fetchSubjects() {
-    console.log('fdfa')
+    console.log('fdfa');
     setLoading(true);
     getAllSubjectsService()
       // .catch((err) => {
@@ -101,19 +103,23 @@ export function LessonListPage() {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete Customer
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? You can't undo this action afterwards.
+              Are you sure? You can&rsquo;t undo this action afterwards.
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={() => setIsAlertOpen(false)}>
                 Cancel
               </Button>
-              <Button colorScheme='red' onClick={() => setIsAlertOpen(false)} ml={3}>
+              <Button
+                colorScheme="red"
+                onClick={() => setIsAlertOpen(false)}
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>
@@ -146,14 +152,24 @@ export function LessonListPage() {
             Add Subject
           </Button>
         </Box>
-        <Divider/>
-        {!!subjects ? (
+        <Divider />
+        {subjects !== null && subjects.length !== 0  ? (
           <UnorderedList width={'100%'} maxW={'500px'}>
-            {subjects.sort((a,b) => a.id - b.id).map((subject) => (
-              <LessonListItem key={subject.id} subjectName={subject.name} id={subject.id} onDelete={handleDelete} onEdit={handleEdit}/>
-            ))}
+            {subjects
+              .sort((a, b) => b.id - a.id)
+              .map((subject) => (
+                <LessonListItem
+                  key={subject.id}
+                  subjectName={subject.name}
+                  id={subject.id}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
+              ))}
           </UnorderedList>
-        ): <Spinner size={'xl'}/>}
+        ) : (
+          <Spinner size={'xl'} />
+        )}
       </Flex>
     </>
   );

@@ -118,7 +118,7 @@ export function HomeworkListPage() {
         return id === prevHw.id ? hw : prevHw;
       });
     });
-    fetchHomeworks()
+    fetchHomeworks();
   }
 
   function onDelete(id) {
@@ -274,32 +274,38 @@ export function HomeworkListPage() {
           >
             {!!hws && !!subjects && !isLoading ? (
               <>
-                {hws.map((hw) => {
-                  let name;
-                  subjects.map((subject) => {
-                    if (subject.id === hw.subjectId) {
-                      name = subject.name;
-                    }
-                  });
+                {hws
+                  .sort((a, b) => {
+                    const aDate = new Date(a.dueDate).getTime();
+                    const bDate = new Date(b.dueDate).getTime();
+                    return aDate - bDate;
+                  })
+                  .map((hw) => {
+                    let name;
+                    subjects.map((subject) => {
+                      if (subject.id === hw.subjectId) {
+                        name = subject.name;
+                      }
+                    });
 
-                  return (
-                    <HomeworkListItem
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                      title={hw.title}
-                      description={hw.description}
-                      id={hw.id}
-                      grade={hw.grade}
-                      updatedAt={hw.updatedAt}
-                      createdAt={hw.createdAt}
-                      dueDate={hw.dueDate}
-                      subjectName={name}
-                      key={hw.id}
-                      subjectId={hw.subjectId}
-                      subjects={subjects}
-                    />
-                  );
-                })}
+                    return (
+                      <HomeworkListItem
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        title={hw.title}
+                        description={hw.description}
+                        id={hw.id}
+                        grade={hw.grade}
+                        updatedAt={hw.updatedAt}
+                        createdAt={hw.createdAt}
+                        dueDate={hw.dueDate}
+                        subjectName={name}
+                        key={hw.id}
+                        subjectId={hw.subjectId}
+                        subjects={subjects}
+                      />
+                    );
+                  })}
               </>
             ) : (
               <Spinner size={'xl'} />
@@ -349,7 +355,7 @@ export function HomeworkListItem({
       description: description,
       dueDate: new Date(dueDate).toISOString().slice(0, -1),
       subjectId: subjectId,
-      grade: grade,
+      grade: grade === null ? 0 : Number(grade),
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
@@ -357,7 +363,7 @@ export function HomeworkListItem({
         dueDate: values.dueDate,
         title: values.title,
         description: values.description,
-        grade: Number(values.grade),
+        grade: values.grade === null ? 0 : Number(values.grade),
         subjectId: values.subjectId,
       };
       amendHomeworkService(id, hw).then(() => {
@@ -439,10 +445,9 @@ export function HomeworkListItem({
               >
                 <FormLabel>Grade</FormLabel>
                 <NumberInput
-                  defaultValue={formik.values.grade}
                   min={0}
                   max={12}
-                  value={String(formik.values.grade)}
+                  value={formik.values.grade}
                   onChange={(valueAsString, valueAsNumber) =>
                     formik.setFieldValue('grade', valueAsNumber)
                   }
@@ -487,7 +492,15 @@ export function HomeworkListItem({
               </Text>
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter as={ButtonGroup}>
+            <Button
+              onClick={() => {
+                onClose();
+                editingModal.onOpen();
+              }}
+            >
+              Edit
+            </Button>
             <Button onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>

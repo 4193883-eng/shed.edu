@@ -13,6 +13,7 @@ import {
   Button,
   ButtonGroup,
   useToast,
+  useColorMode,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -26,6 +27,7 @@ const validationSchema = yup.object().shape({
 });
 
 export default function LoginPage() {
+  const { colorMode } = useColorMode();
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,7 +56,7 @@ export default function LoginPage() {
   });
   return (
     <Flex h={'90vh'} justifyContent={'center'} alignItems={'center'}>
-      <Card mx={'30%'} w={'500px'}>
+      <Card mW={'500px'} w={'95%'}>
         <CardBody
           display={'flex'}
           flexDirection={'column'}
@@ -63,7 +65,7 @@ export default function LoginPage() {
           gap={4}
           w={'100%'}
         >
-          <SiteLogo to="/signin">SignIn</SiteLogo>
+          <SiteLogo to="/signin" isLight={colorMode === 'dark'} />
           <Box
             as="form"
             mt={'2'}

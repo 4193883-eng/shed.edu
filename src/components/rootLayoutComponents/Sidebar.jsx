@@ -130,7 +130,7 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
             onClick={toggleColorMode}
             icon={colorMode === 'light'? <FaMoon/>: <FaSun/>}
             variant={'outline'}
-          />
+          />{ isLoggedIn &&
           <IconButton
             onClick={() => {
               dispatch(flushAuthTokenAction());
@@ -140,7 +140,8 @@ export function Sidebar({ isOpen = false, onClose, isLoggedIn = false }) {
             as={Link}
             to={'/'}
             aria-label={'logout button'}
-          ></IconButton>
+          />
+        }
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

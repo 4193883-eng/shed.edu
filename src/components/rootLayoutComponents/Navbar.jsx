@@ -23,7 +23,7 @@ export function Navbar({ isLoggedIn, onOpen }) {
         alignItems={'center'}
         justifyContent={'space-between'}
         bg={'purple.600'}
-        w={'100'}
+        w={'100%'}
         p={'2'}
       >
         <Flex flexDir={'row'} gap={2} alignItems={'center'} mr={3}>

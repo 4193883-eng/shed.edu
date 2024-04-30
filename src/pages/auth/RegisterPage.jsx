@@ -12,7 +12,7 @@ import {
   CardBody,
   Button,
   ButtonGroup,
-  useToast,
+  useToast, useColorMode,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -23,11 +23,12 @@ const validationSchema = yup.object().shape({
     .max(50, 'Email cannot be longer than 50')
     .required('Email is required'),
   password: yup.string().min(8).max(255).required('Password is required'),
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
+  firstName: yup.string().required('First name is required'),
+  lastName: yup.string().required('Last name is required'),
 });
 
 export default function RegisterPage() {
+  const { colorMode } = useColorMode();
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,15 +59,16 @@ export default function RegisterPage() {
   });
   return (
     <Flex h={'90vh'} justifyContent={'center'} alignItems={'center'}>
-      <Card mx={'30%'} w={'500px'}>
+      <Card maxW={'500px'} w={'95%'}>
         <CardBody
           display={'flex'}
           flexDirection={'column'}
           justifyContent={'center'}
           alignItems={'center'}
           gap={4}
+          width={'100%'}
         >
-          <SiteLogo to="/signin">SignIn</SiteLogo>
+          <SiteLogo to="/signin" isLight={colorMode === 'dark'}/>
           <Box
             as="form"
             mt={'2'}

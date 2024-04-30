@@ -3,7 +3,7 @@
   "/signin": "Sign In",
   "/signup": "Registration",
   "/hw-list": "Homework List",
-  "/lesson-list": "Lesson List",
+  "/lesson-list": "Subject List",
   "/profile": "Profile Page",
   "/news": "News Feed Page",
   "/news/:id": "Article Page",
