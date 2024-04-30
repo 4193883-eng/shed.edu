@@ -333,6 +333,7 @@ export function HomeworkListItem({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cardBody = useRef();
+  const { colorMode } = useColorMode();
   const [isLoading, setIsLoading] = useState(false);
 
   function handleOpening(e) {
@@ -478,16 +479,21 @@ export function HomeworkListItem({
           <ModalHeader as={ButtonGroup} alignItems={'center'} display={'flex'}>
             <Text>{title}</Text>
             <Text fontSize={'sm'}>|</Text>
-            <Text color={'gray.300'}>{subjectName}</Text>
+            <Text color={colorMode === 'light' ? 'gray.500' : 'gray.300'}>
+              {subjectName}
+            </Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody flexDir={'column'} as={Flex}>
-            <Text color={'gray.300'}>
+            <Text color={colorMode === 'light' ? 'gray.500' : 'gray.300'}>
               Due at {format(new Date(dueDate), 'dd/MM/yyyy kk:mm')}
             </Text>
             <ParsedMarkdown value={description} />
             {!!grade && (
-              <Text alignSelf={'flex-end'} color={'gray.300'}>
+              <Text
+                alignSelf={'flex-end'}
+                color={colorMode === 'light' ? 'gray.500' : 'gray.300'}
+              >
                 Grade: {grade}
               </Text>
             )}
@@ -518,7 +524,7 @@ export function HomeworkListItem({
           >
             <Flex flexDir={'column'} cursor={'default'}>
               <Text>{title}</Text>
-              <Text color={'gray.300'}>{subjectName}</Text>
+              <Text color={colorMode === 'light'? 'gray.500' : 'gray.300'}>{subjectName}</Text>
             </Flex>
 
             <Text cursor={'default'}>

@@ -19,6 +19,16 @@ import { HomeworkListItem } from './HomeworkListPage';
 import PropTypes from 'prop-types';
 import { BsDot } from 'react-icons/bs';
 
+function grade2color(grade){
+  if (grade >= 8.5){
+    return 'green.400'
+  } else if (grade < 8.5 && grade >= 5){
+    return 'yellow.400'
+  } else {
+    return 'red.500'
+  }
+}
+
 function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [homeWork, setHomeWork] = useState([]);
@@ -229,17 +239,19 @@ function HomePage() {
 }
 
 function SubjectMedianGradeDisplay({ subjectName, medianGrade }) {
+
   return (
     <Flex w={'100%'} alignItems={'center'} justifyContent={'space-between'}>
       <Flex alignItems={'center'}>
         <BsDot /> {subjectName}
       </Flex>
       <CircularProgress
+
         value={(100 / 12) * medianGrade}
         size={'50px'}
-        color="green.400"
+        color={grade2color(medianGrade)}
       >
-        <CircularProgressLabel>{medianGrade}</CircularProgressLabel>
+        <CircularProgressLabel as={Text} fontSize={'medium'}>{medianGrade}</CircularProgressLabel>
       </CircularProgress>
     </Flex>
   );
