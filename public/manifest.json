@@ -2,7 +2,7 @@
   "name": "shed.edu",
   "theme_color": "#6b46c1",
   "background_color": "#1a202c",
-  "display": "minimal-ui",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/",
   "icons": [
