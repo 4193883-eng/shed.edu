@@ -19,13 +19,13 @@ import { HomeworkListItem } from './HomeworkListPage';
 import PropTypes from 'prop-types';
 import { BsDot } from 'react-icons/bs';
 
-function grade2color(grade){
-  if (grade >= 8.5){
-    return 'green.400'
-  } else if (grade < 8.5 && grade >= 5){
-    return 'yellow.400'
+function grade2color(grade) {
+  if (grade >= 8.5) {
+    return 'green.400';
+  } else if (grade < 8.5 && grade >= 5) {
+    return 'yellow.400';
   } else {
-    return 'red.500'
+    return 'red.500';
   }
 }
 
@@ -161,10 +161,11 @@ function HomePage() {
             <>
               {hws
                 .sort((a, b) => {
-                  const aDate = (new Date(a.dueDate)).getTime();
+                  const aDate = new Date(a.dueDate).getTime();
                   const bDate = new Date(b.dueDate).getTime();
-                  return aDate - bDate
+                  return aDate - bDate;
                 })
+                .slice(0, 3)
                 .map((hw) => {
                   let name;
                   subjects.map((subject) => {
@@ -239,19 +240,19 @@ function HomePage() {
 }
 
 function SubjectMedianGradeDisplay({ subjectName, medianGrade }) {
-
   return (
     <Flex w={'100%'} alignItems={'center'} justifyContent={'space-between'}>
       <Flex alignItems={'center'}>
         <BsDot /> {subjectName}
       </Flex>
       <CircularProgress
-
         value={(100 / 12) * medianGrade}
         size={'50px'}
         color={grade2color(medianGrade)}
       >
-        <CircularProgressLabel as={Text} fontSize={'medium'}>{medianGrade}</CircularProgressLabel>
+        <CircularProgressLabel as={Text} fontSize={'medium'}>
+          {medianGrade}
+        </CircularProgressLabel>
       </CircularProgress>
     </Flex>
   );
