@@ -153,7 +153,7 @@ export function LessonListPage() {
           </Button>
         </Box>
         <Divider />
-        {subjects !== null && subjects.length !== 0  ? (
+        {subjects !== null   ? (
           <UnorderedList width={'100%'} maxW={'500px'}>
             {subjects
               .sort((a, b) => b.id - a.id)
