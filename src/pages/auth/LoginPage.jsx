@@ -56,7 +56,7 @@ export default function LoginPage() {
   });
   return (
     <Flex h={'90vh'} justifyContent={'center'} alignItems={'center'}>
-      <Card mW={'500px'} w={'95%'}>
+      <Card w={'95%'} maxW={'500px'}>
         <CardBody
           display={'flex'}
           flexDirection={'column'}
