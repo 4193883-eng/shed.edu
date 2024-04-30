@@ -61,6 +61,9 @@ export function LessonListPage() {
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
+      if (values.subjectName === ''){
+        return;
+      }
       setFormLoading(true);
       setSubjects((prev) => [{ name: values.subjectName }, ...prev]);
       createSubjectService({
